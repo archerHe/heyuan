@@ -19,7 +19,7 @@ QStringList FlashCommands::CmdDevices()
     return par;
 }
 
-QStringList FlashCommands::CmdFlashBoot(QString sn)
+QStringList FlashCommands::CmdFlashBoot(QString fw_path, QString sn)
 {
     QStringList par;
     par << "-s" << sn << "flash" << "boot" << fw_path + "/boot.img";

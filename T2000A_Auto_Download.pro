@@ -18,14 +18,16 @@ SOURCES += main.cpp\
     qdeviceflashmanager.cpp \
     flashcommands.cpp \
     texthelper.cpp \
-    detectdevice.cpp
+    detectdevice.cpp \
+    flashdevice.cpp
 
 HEADERS  += mainwindow.h \
     burningdevice.h \
     qdeviceflashmanager.h \
     flashcommands.h \
     texthelper.h \
-    detectdevice.h
+    detectdevice.h \
+    flashdevice.h
 
 FORMS    += mainwindow.ui \
     burningdevice.ui

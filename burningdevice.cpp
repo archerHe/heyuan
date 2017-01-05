@@ -6,11 +6,12 @@
 #include <QtGui>
 #include <QtDebug>
 
-BurningDevice::BurningDevice(QString path, QString sn, QWidget *parent) :
-    QWidget(parent),fw_path(path),device_sn(sn),
+BurningDevice::BurningDevice(QWidget *parent) :
+    QWidget(parent),
     ui(new Ui::BurningDevice)
 {
     ui->setupUi(this);
+    //ui->sn->setText(sn);
 }
 
 BurningDevice::~BurningDevice()
@@ -22,6 +23,12 @@ void BurningDevice::InitView()
 {
     p = new QProcess(this);
     ui->pgb_burning->hide();
+}
+
+void BurningDevice::SetSn(QString sn)
+{
+    device_sn = sn;
+    ui->sn->setText(sn);
 }
 
 void BurningDevice::readyFlash()

@@ -2,9 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <detectdevices.h>
 #include <QThread>
 #include "detectdevice.h"
+#include "burningdevice.h"
 
 class QProcess;
 class QVBoxLayout;
@@ -39,9 +39,11 @@ private:
     QProcess *p;
     QVBoxLayout *v_layout;
     QStringList burningList;
-    DetectDevices dectect_thread;
+    QThread detect_thread;
     QThread device_thread_01;
     DetectDevice device;
+    //BurningDevice device_01;
+
     bool isChecking;
 
     void InitWidget();

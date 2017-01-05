@@ -17,10 +17,10 @@
    <widget class="QScrollArea" name="scrollArea">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>120</y>
-      <width>631</width>
-      <height>121</height>
+      <x>20</x>
+      <y>80</y>
+      <width>681</width>
+      <height>371</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -31,21 +31,11 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>629</width>
-       <height>119</height>
+       <width>679</width>
+       <height>369</height>
       </rect>
      </property>
     </widget>
-   </widget>
-   <widget class="QTextBrowser" name="tb_logs">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>280</y>
-      <width>641</width>
-      <height>171</height>
-     </rect>
-    </property>
    </widget>
    <widget class="QPushButton" name="btn_burning_switch">
     <property name="geometry">
@@ -60,7 +50,7 @@
      <string>Start</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>20</x>

@@ -14,11 +14,12 @@ class BurningDevice : public QWidget
     Q_OBJECT
 
 public:
-    explicit BurningDevice(QString path, QString sn, QWidget *parent = 0);
+    explicit BurningDevice(QWidget *parent = 0);
     ~BurningDevice();
 
 
     void InitView();
+    void SetSn(QString sn);
 
 private:
     Ui::BurningDevice *ui;

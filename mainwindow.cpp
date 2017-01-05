@@ -14,18 +14,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    //ui->scrollAreaWidgetContents->setLayout(vLayout);
-    device.moveToThread(&device_thread_01);
-    connect(this, SIGNAL(deviceIsChecked(QString)), &device, SLOT(Checking()));
-    device_thread_01.start();
+    InitWidget();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    device_thread_01.quit();
-    device_thread_01.wait();
+    DetectDevice::stop = true;
+    detect_thread.quit();
+    detect_thread.wait();
 }
 
 
@@ -33,14 +30,12 @@ void MainWindow::ReadErr()
 {
     QString err = p->readAllStandardError();
     qDebug() << err;
-    ui->tb_logs->append(err);
 }
 
 void MainWindow::ReadStdOut()
 {
     QString std_out = p->readAllStandardOutput();
     qDebug() << std_out;
-    ui->tb_logs->append(std_out);
 }
 
 void MainWindow::BeginProcess()
@@ -74,30 +69,34 @@ void MainWindow::InitWidget()
     //connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(ReadStdOut()));
     //connect(p, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()));
     //connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(EndProcess()));
-
-    v_layout = new QVBoxLayout(ui->scrollAreaWidgetContents);
-    ui->scrollAreaWidgetContents->setLayout(v_layout);
     //connect(dectect_thread, SIGNAL(hasDevice()), this, SLOT(addDeviceUI(QString)));
+
+    v_layout = new QVBoxLayout();
+    ui->scrollAreaWidgetContents->setLayout(v_layout);
+    device.moveToThread(&detect_thread);
+    connect(this, SIGNAL(deviceIsChecked(QString)), &device, SLOT(Checking()));
+    connect(&device, &DetectDevice::getSn, this, &MainWindow::addDeviceUI);
+    detect_thread.start();
 }
 
 void MainWindow::on_btn_burning_switch_clicked()
 {
-    /*
-    if(dectect_thread.isRunning()){
-        DetectDevices::stop = true;
+    if(!DetectDevice::stop){
+        DetectDevice::stop = true;
         ui->btn_burning_switch->setText("Start");
     }else{
-        dectect_thread.start();
         ui->btn_burning_switch->setText("Stop");
+        DetectDevice::stop = false;
+        emit deviceIsChecked("asdf");
     }
-    */
-    //dectect_thread.start();
-
-    emit deviceIsChecked("asdf");
 }
 
 void MainWindow::addDeviceUI(const QString &sn)
 {
-    BurningDevice *device = new BurningDevice("asdfa", sn, this);
-    v_layout->addWidget(device);
+    qDebug() << "addDeviceUI";
+    //BurningDevice *burning_device = new BurningDevice("asdfa", sn, this);
+    BurningDevice device_01;
+    device_01.SetSn(sn);
+    device_01.moveToThread(&device_thread_01);
+    v_layout->addWidget(&device_01);
 }

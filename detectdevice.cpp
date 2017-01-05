@@ -3,7 +3,7 @@
 #include <QProcess>
 #include <QThread>
 
-bool DetectDevice::stop = false;
+bool DetectDevice::stop = true;
 DetectDevice::DetectDevice(QObject *parent) : QObject(parent)
 {
     p = new QProcess(this);
@@ -17,40 +17,56 @@ DetectDevice::~DetectDevice()
 
 }
 
+void DetectDevice::CheckSn(QString snList)
+{
+    QStringList list = snList.split("fastboot");
+    qDebug() << list;
+    foreach (QString sn, list) {
+        if(!burningList.contains(sn.trimmed())){
+            if(sn.trimmed().isEmpty()){
+                break;
+            }
+            burningList.append(sn.trimmed());
+            emit getSn(sn.trimmed());
+        }
+    }
+}
+
 void DetectDevice::Checking()
 {
     while(!DetectDevice::stop){
         p->start(FlashCommands::FAST_BOOT_PFT, FlashCommands::CmdDevices());
         p->waitForFinished();
-        QThread.sleep(2000);
+        QThread::sleep(2);
     }
-
-
 }
 
 void DetectDevice::ReadErr()
 {
     QString err = p->readAllStandardError();
-    qDebug() << TAG << err;
+    //qDebug() << TAG << err;
 }
 
 void DetectDevice::ReadStdOut()
 {
     QString std_out = p->readAllStandardOutput();
     qDebug() << TAG << std_out;
-
+    QString snList = txtHelper.GetSnFromFastboot(std_out);
+    if(!snList.isNull()){
+        CheckSn(snList);
+    }
 }
 
 void DetectDevice::BeginProcess()
 {
-    qDebug() << TAG << "start process";
+    //qDebug() << TAG << "start process";
 }
 
 void DetectDevice::EndProcess()
 {
-    qDebug() << TAG << "exitStatus: " << p->exitStatus();
+    //qDebug() << TAG << "exitStatus: " << p->exitStatus();
     if(p->exitStatus() == QProcess::NormalExit)
     {
-        qDebug() << TAG <<"normal end";
+        //qDebug() << TAG <<"normal end";
     }
 }

@@ -9,7 +9,7 @@ public:
     FlashCommands(QString sn, QString path);
     ~FlashCommands();
     static QStringList CmdDevices();
-    QStringList CmdFlashBoot(QString sn);
+    QStringList CmdFlashBoot(QString fw_path, QString sn);
     static QStringList CmdFlashContinue(QString sn);
 
     static const QString FAST_BOOT_PFT;
