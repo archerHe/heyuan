@@ -4,6 +4,7 @@
 #include <QObject>
 #include "flashcommands.h"
 #include "texthelper.h"
+#include "flashdevice.h"
 
 class QProcess;
 class DetectDevice : public QObject
@@ -31,6 +32,7 @@ private:
     const QString TAG = "DetectDevice";
     TextHelper txtHelper;
     QStringList burningList;
+    FlashDevice *device_01;
 };
 
 #endif // DETECTDEVICE_H

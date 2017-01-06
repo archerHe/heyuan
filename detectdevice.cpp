@@ -6,6 +6,7 @@
 bool DetectDevice::stop = true;
 DetectDevice::DetectDevice(QObject *parent) : QObject(parent)
 {
+    device_01 = new FlashDevice();
     p = new QProcess(this);
     connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(ReadStdOut()));
     connect(p, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()));
@@ -20,7 +21,7 @@ DetectDevice::~DetectDevice()
 void DetectDevice::CheckSn(QString snList)
 {
     QStringList list = snList.split("fastboot");
-    qDebug() << list;
+    //qDebug() << list;
     foreach (QString sn, list) {
         if(!burningList.contains(sn.trimmed())){
             if(sn.trimmed().isEmpty()){
@@ -50,7 +51,7 @@ void DetectDevice::ReadErr()
 void DetectDevice::ReadStdOut()
 {
     QString std_out = p->readAllStandardOutput();
-    qDebug() << TAG << std_out;
+    //qDebug() << TAG << "\n"<< std_out;
     QString snList = txtHelper.GetSnFromFastboot(std_out);
     if(!snList.isNull()){
         CheckSn(snList);

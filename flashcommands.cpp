@@ -1,10 +1,9 @@
 #include "flashcommands.h"
 #include <QDebug>
 
-FlashCommands::FlashCommands(QString sn, QString path)
+FlashCommands::FlashCommands()
 {
-    this->device_sn = sn;
-    this->fw_path = path;
+
 }
 
 FlashCommands::~FlashCommands()
@@ -26,6 +25,34 @@ QStringList FlashCommands::CmdFlashBoot(QString fw_path, QString sn)
     return par;
 }
 
+QStringList FlashCommands::cmdFlashUnlock(QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "flashing" << "unlock";
+    return par;
+}
+
+QStringList FlashCommands::cmdFlashSystem(QString fw_path, QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "flash" << "system" << fw_path + "/system.img";
+    return par;
+}
+
+QStringList FlashCommands::cmdFlashLock(QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "flashing" << "lock";
+    return par;
+}
+
+QStringList FlashCommands::cmdFlashRecovery(QString fw_path,QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "flash" << "recovery" << fw_path + "/recovery.img";
+    return par;
+}
+
 QStringList FlashCommands::CmdFlashContinue(QString sn)
 {
     QStringList par;
@@ -33,5 +60,13 @@ QStringList FlashCommands::CmdFlashContinue(QString sn)
     return par;
 }
 
+QStringList FlashCommands::CmdAdbGetMesSn()
+{
+    QStringList par;
+    par << "shell cat /sdcard/.sn";
+    return par;
+}
+
 const QString FlashCommands::FAST_BOOT_PFT = "fastboot.pft";
 const QString FlashCommands::ADB_PFT = "adb.pft";
+const QString FlashCommands::FW = "/SSD/AndroidSrc/T2000A_wifi/out/target/product/r2_cht_ffd/";

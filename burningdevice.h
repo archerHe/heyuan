@@ -21,15 +21,23 @@ public:
     void InitView();
     void SetSn(QString sn);
 
+
+    QString getId() const;
+    void setId(const QString &value);
+
+    bool getBurning_flag() const;
+    void setBurning_flag(bool value);
+
+    QString device_sn;
 private:
     Ui::BurningDevice *ui;
 
-    QString device_sn;
+
     QString fw_path;
 
     QProcess *p;
-
-
+    QString id;
+    bool burning_flag;
 private slots:
     void ReadErr();
     void ReadStdOut();
@@ -37,6 +45,9 @@ private slots:
     void EndProcess();
 
     void readyFlash();
+
+signals:
+    void ready2Flash(QString sn);
 };
 
 #endif // BURNINGDEVICE_H

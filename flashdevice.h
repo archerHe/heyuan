@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "flashcommands.h"
+#include <QMutex>
 
 class QProcess;
 class FlashDevice : public QObject
@@ -13,21 +14,41 @@ public:
     ~FlashDevice();
 
     void init();
-    void FlashBootImg();
+    int FlashBootImg(QString sn);
+    int FlashUnlock(QString sn);
+    int FlashSystem(QString sn);
+    int FlashLock(QString sn);
+    int FlashRecovery(QString sn);
+    int FlashContinue(QString sn);
+    QString GetMesSn();
 
+    bool getBurning_flag();
+    void setBurning_flag(bool value);
+
+    bool burning_flag;
+    QString sn;
 signals:
-
+    void FinishedFlash(QString sn);
 public slots:
     void ReadErr();
     void ReadStdOut();
     void BeginProcess();
     void EndProcess();
+    void UpdateDevice(const QString &sn);
+    void UpdateDevice02(const QString &sn);
+    void UpdateDevice03(const QString &sn);
+
 
 private:
-    QString sn;
+
     QProcess *p;
     QString fw_path;
-    //FlashCommands cmd;
+    FlashCommands *cmd;
+    const QString id = "A";
+
+    static QStringList burning_list;
+    static QStringList burning_sn_list;
+
 };
 
 #endif // FLASHDEVICE_H

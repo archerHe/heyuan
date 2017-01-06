@@ -25,6 +25,30 @@ MainWindow::~MainWindow()
     detect_thread.wait();
 }
 
+void MainWindow::SelectBurningUI(QString sn)
+{
+    qDebug() << "SelectBurningUI";
+    foreach (BurningDevice *burning, list) {
+        if(!burning->getBurning_flag()){
+            qDebug() << "id: " << burning->getId();
+            burning->SetSn(sn);
+            burning->show();
+            burning->setBurning_flag(true);
+            return;
+        }
+    }
+}
+
+void MainWindow::Finished(QString sn)
+{
+    qDebug() << "Finished sn: " << sn;
+    foreach (BurningDevice *burning, list) {
+        if(burning->device_sn == sn){
+
+        }
+    }
+}
+
 
 void MainWindow::ReadErr()
 {
@@ -77,6 +101,22 @@ void MainWindow::InitWidget()
     connect(this, SIGNAL(deviceIsChecked(QString)), &device, SLOT(Checking()));
     connect(&device, &DetectDevice::getSn, this, &MainWindow::addDeviceUI);
     detect_thread.start();
+
+    device_01 = new BurningDevice();
+    device_01->setId("burning01");
+    device_02 = new BurningDevice();
+    device_02->setId("burning02");
+    device_03 = new BurningDevice();
+    device_03->setId("burning03");
+    device_01->hide();
+    device_02->hide();
+    device_03->hide();
+    v_layout->addWidget(device_01);
+    v_layout->addWidget(device_02);
+    v_layout->addWidget(device_03);
+
+    list << device_01 << device_02 << device_03;
+
 }
 
 void MainWindow::on_btn_burning_switch_clicked()
@@ -94,9 +134,11 @@ void MainWindow::on_btn_burning_switch_clicked()
 void MainWindow::addDeviceUI(const QString &sn)
 {
     qDebug() << "addDeviceUI";
-    //BurningDevice *burning_device = new BurningDevice("asdfa", sn, this);
-    BurningDevice device_01;
-    device_01.SetSn(sn);
-    device_01.moveToThread(&device_thread_01);
-    v_layout->addWidget(&device_01);
+    /*
+    BurningDevice *device_01 = new BurningDevice();
+    device_01->SetSn(sn);
+    v_layout->addWidget(device_01);
+    */
+    SelectBurningUI(sn);
+    device_manager.StartFlashDevice(sn);
 }

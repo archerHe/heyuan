@@ -2,6 +2,8 @@
 #define QDEVICEFLASHMANAGER_H
 
 #include <QObject>
+#include <flashdevice.h>
+#include <QThread>
 
 class QProcess;
 
@@ -12,13 +14,28 @@ public:
     explicit QDeviceFlashManager(QObject *parent = 0);
     ~QDeviceFlashManager();
 
+    void StartFlashDevice(QString sn);
 signals:
+    void startFlash(const QString &sn);
+    void startFlash02(const QString &sn);
+    void startFlash03(const QString &sn);
+    void startFlash04(const QString &sn);
 
+    void FlashFinish(QString sn);
 public slots:
+    void FinishFlash(QString sn);
 
 private:
-    QString device_sn;
-    QProcess *p;
+    QList<FlashDevice *> deviceList;
+    FlashDevice *device_01;
+    QThread thread_01;
+    FlashDevice *device_02;
+    QThread thread_02;
+    FlashDevice *device_03;
+    QThread thread_03;
+    FlashDevice *device_04;
+    QThread thread_04;
+
 };
 
 #endif // QDEVICEFLASHMANAGER_H
