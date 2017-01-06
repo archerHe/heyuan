@@ -5,7 +5,7 @@
 QDeviceFlashManager::QDeviceFlashManager(QObject *parent) :
     QObject(parent)
 {
-    deviceList << device_01 << device_02;
+
     device_01 = new FlashDevice();
     device_02 = new FlashDevice();
     device_03 = new FlashDevice();
@@ -14,15 +14,20 @@ QDeviceFlashManager::QDeviceFlashManager(QObject *parent) :
     device_02->moveToThread(&thread_02);
     device_03->moveToThread(&thread_03);
     device_04->moveToThread(&thread_04);
+
+    deviceList << device_01 << device_02;
+
     connect(&thread_01, &QThread::finished, device_01, &QObject::deleteLater);
     connect(this, &QDeviceFlashManager::startFlash, device_01, &FlashDevice::UpdateDevice);
     connect(device_01, &FlashDevice::FinishedFlash, this, &QDeviceFlashManager::FinishFlash);
     thread_01.start();
     connect(&thread_02, &QThread::finished, device_02, &QObject::deleteLater);
     connect(this, &QDeviceFlashManager::startFlash02, device_02, &FlashDevice::UpdateDevice02);
+    connect(device_02, &FlashDevice::FinishedFlash, this, &QDeviceFlashManager::FinishFlash);
     thread_02.start();
     connect(&thread_03, &QThread::finished, device_03, &QObject::deleteLater);
     connect(this, &QDeviceFlashManager::startFlash03, device_03, &FlashDevice::UpdateDevice03);
+    connect(device_03, &FlashDevice::FinishedFlash, this, &QDeviceFlashManager::FinishFlash);
     thread_03.start();
 }
 
@@ -53,12 +58,16 @@ void QDeviceFlashManager::StartFlashDevice(QString sn)
 
 void QDeviceFlashManager::FinishFlash(QString sn)
 {
-    foreach (FlashDevice *device, deviceList) {
+    qDebug() << "FinishFlash.. " << sn;
+
+    foreach (FlashDevice *device, deviceList)
+    {
         if(device->sn == sn){
             device->sn = "";
             emit FlashFinish(sn);
             return;
         }
+
     }
 }
 

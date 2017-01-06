@@ -27,6 +27,7 @@ public:
 
     bool burning_flag;
     QString sn;
+    const QString id = "A";
 signals:
     void FinishedFlash(QString sn);
 public slots:
@@ -44,7 +45,7 @@ private:
     QProcess *p;
     QString fw_path;
     FlashCommands *cmd;
-    const QString id = "A";
+
 
     static QStringList burning_list;
     static QStringList burning_sn_list;

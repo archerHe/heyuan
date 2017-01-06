@@ -27,6 +27,7 @@ public:
 
     bool getBurning_flag() const;
     void setBurning_flag(bool value);
+    void setBackbroundColor(QString color);
 
     QString device_sn;
 private:

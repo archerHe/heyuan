@@ -5,14 +5,15 @@
 #include <QPushButton>
 #include <QtGui>
 #include <QtDebug>
+#include <QPalette>
 
 BurningDevice::BurningDevice(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BurningDevice)
 {
     ui->setupUi(this);
-    //ui->sn->setText(sn);
     burning_flag = false;
+
 }
 
 BurningDevice::~BurningDevice()
@@ -48,6 +49,11 @@ bool BurningDevice::getBurning_flag() const
 void BurningDevice::setBurning_flag(bool value)
 {
     burning_flag = value;
+}
+
+void BurningDevice::setBackbroundColor(QString color)
+{
+    this->setStyleSheet("background-color:" + color);
 }
 
 

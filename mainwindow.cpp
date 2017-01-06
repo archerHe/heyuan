@@ -44,7 +44,8 @@ void MainWindow::Finished(QString sn)
     qDebug() << "Finished sn: " << sn;
     foreach (BurningDevice *burning, list) {
         if(burning->device_sn == sn){
-
+            burning->SetSn("");
+            burning->setBackbroundColor("green");
         }
     }
 }
@@ -101,6 +102,8 @@ void MainWindow::InitWidget()
     connect(this, SIGNAL(deviceIsChecked(QString)), &device, SLOT(Checking()));
     connect(&device, &DetectDevice::getSn, this, &MainWindow::addDeviceUI);
     detect_thread.start();
+
+    connect(&device_manager, SIGNAL(FlashFinish(QString)), this, SLOT(Finished(QString)));
 
     device_01 = new BurningDevice();
     device_01->setId("burning01");

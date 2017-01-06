@@ -116,13 +116,15 @@ void FlashDevice::setBurning_flag(bool value)
 void FlashDevice::UpdateDevice(const QString &sn)
 {
     burning_flag = true;
+    this->sn = sn;
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
-            (FlashSystem(sn) == 0) &&
+//            (FlashSystem(sn) == 0) &&
             (FlashRecovery(sn) == 0) &&
-            (FlashLock(sn) == 0) &&
-            FlashContinue(sn)){
+            (FlashLock(sn) == 0)){
         qDebug()<< "UpdateDevice sn:" << sn << " successful";
+        FlashContinue(sn);
+        burning_flag = false;
         emit FinishedFlash(sn);
     }else{
         qDebug()<< "UpdateDevice sn:" << sn << " fail";
@@ -132,13 +134,16 @@ void FlashDevice::UpdateDevice(const QString &sn)
 void FlashDevice::UpdateDevice02(const QString &sn)
 {
     burning_flag = true;
+    this->sn = sn;
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
-            (FlashSystem(sn) == 0) &&
+ //           (FlashSystem(sn) == 0) &&
             (FlashRecovery(sn) == 0) &&
-            (FlashLock(sn) == 0) &&
-            FlashContinue(sn)){
+            (FlashLock(sn) == 0)){
         qDebug()<< "UpdateDevice02 sn:"<< sn << "  successful";
+        FlashContinue(sn);
+        burning_flag = false;
+        emit FinishedFlash(sn);
     }else{
         qDebug() << "UpdateDevice02 sn:"<< sn << " fail";
     }
@@ -147,14 +152,16 @@ void FlashDevice::UpdateDevice02(const QString &sn)
 void FlashDevice::UpdateDevice03(const QString &sn)
 {
     burning_flag = true;
+    this->sn = sn;
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
-            (FlashSystem(sn) == 0) &&
+ //           (FlashSystem(sn) == 0) &&
             (FlashRecovery(sn) == 0) &&
-            (FlashLock(sn) == 0) &&
-            FlashContinue(sn)){
+            (FlashLock(sn) == 0)){
         qDebug()<< "UpdateDevice03 sn:"<< sn << "  successful";
-
+        FlashContinue(sn);
+        burning_flag = false;
+        emit FinishedFlash(sn);
     }else{
         qDebug() << "UpdateDevice03 sn:"<< sn << "  fail";
     }
