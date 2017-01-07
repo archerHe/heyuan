@@ -10,6 +10,7 @@ public:
     ~TextHelper();
 
     QString GetSnFromFastboot(QString result);
+    QString GetSnFromAdb(QString result);
 };
 
 #endif // TEXTHELPER_H

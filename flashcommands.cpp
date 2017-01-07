@@ -60,13 +60,28 @@ QStringList FlashCommands::CmdFlashContinue(QString sn)
     return par;
 }
 
-QStringList FlashCommands::CmdAdbGetMesSn()
+QStringList FlashCommands::CmdAdbGetMesSn(QString sn)
 {
     QStringList par;
-    par << "shell cat /sdcard/.sn";
+    par << "-s" << sn << "shell cat /sdcard/.sn";
+    return par;
+}
+
+QStringList FlashCommands::CmdAdbGetDeviceSn()
+{
+    QStringList par;
+    par << "devices";
+    return par;
+}
+
+QStringList FlashCommands::CmdAdbStartServer()
+{
+    QStringList par;
+    par << "start-server";
     return par;
 }
 
 const QString FlashCommands::FAST_BOOT_PFT = "fastboot.pft";
 const QString FlashCommands::ADB_PFT = "adb.pft";
 const QString FlashCommands::FW = "/SSD/AndroidSrc/T2000A_wifi/out/target/product/r2_cht_ffd/";
+//QMap FlashCommands::sn_map;

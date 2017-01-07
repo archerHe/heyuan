@@ -15,11 +15,14 @@ public:
     QStringList cmdFlashLock(QString sn);
     QStringList cmdFlashRecovery(QString fw_path, QString sn);
     QStringList CmdFlashContinue(QString sn);
-    QStringList CmdAdbGetMesSn();
+    QStringList CmdAdbGetMesSn(QString sn);
+    static QStringList CmdAdbGetDeviceSn();
+    static QStringList CmdAdbStartServer();
 
     static const QString FAST_BOOT_PFT;
     static const QString ADB_PFT;
     const static QString FW;
+    static QMap<QString, QString> sn_map;
 private:
     QString fw_path;
     QString device_sn;

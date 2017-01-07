@@ -14,8 +14,12 @@ public:
     explicit DetectDevice(QObject *parent = 0);
     ~DetectDevice();
 
-    void CheckSn(QString snList);
+    void CheckSnFromFastboot(QString snList);
+    void CheckSnFromAdb();
+    void CheckFastboot();
+    void CheckADB();
     static bool stop;
+    static QMap<QString, QString> sn_map;
 
 signals:
     void getSn(const QString sn);
@@ -32,6 +36,8 @@ private:
     const QString TAG = "DetectDevice";
     TextHelper txtHelper;
     QStringList burningList;
+    QStringList mesSnList;
+
     FlashDevice *device_01;
 };
 

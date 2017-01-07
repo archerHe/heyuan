@@ -45,7 +45,7 @@ int FlashDevice::FlashUnlock(QString sn)
 int FlashDevice::FlashSystem(QString sn)
 {
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashSystem(FlashCommands::FW, sn));
-    p->waitForFinished(300000);
+    p->waitForFinished(400000);
     qDebug() << "FlashSystem exitcode: " << p->exitCode();
     return p->exitCode();
 }

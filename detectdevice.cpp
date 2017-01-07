@@ -18,26 +18,72 @@ DetectDevice::~DetectDevice()
 
 }
 
-void DetectDevice::CheckSn(QString snList)
+void DetectDevice::CheckSnFromFastboot(QString snList)
 {
     QStringList list = snList.split("fastboot");
-    //qDebug() << list;
+    qDebug() << list;
     foreach (QString sn, list) {
         if(!burningList.contains(sn.trimmed())){
             if(sn.trimmed().isEmpty()){
                 break;
             }
+            qDebug() << "foreach: " << sn.trimmed();
             burningList.append(sn.trimmed());
-            emit getSn(sn.trimmed());
+            //emit getSn(sn.trimmed());
         }
     }
+}
+
+void DetectDevice::CheckSnFromAdb()
+{
+    p->start(FlashCommands::ADB_PFT, FlashCommands::CmdAdbGetDeviceSn());
+    p->waitForFinished();
+    QString std_out = p->readAllStandardOutput();
+    QString snList = txtHelper.GetSnFromAdb(std_out);
+
+}
+
+void DetectDevice::CheckFastboot()
+{
+    p->start(FlashCommands::FAST_BOOT_PFT, FlashCommands::CmdDevices());
+    p->waitForFinished();
+    QString std_out = p->readAllStandardOutput();
+    //qDebug() << TAG << "\n"<< std_out;
+    QString snList = txtHelper.GetSnFromFastboot(std_out);
+    if(!snList.isNull()){
+        CheckSnFromFastboot(snList);
+    }
+}
+
+void DetectDevice::CheckADB()
+{
+    p->start(FlashCommands::ADB_PFT, FlashCommands::CmdAdbGetDeviceSn());
+    p->waitForFinished();
+    QString std_out = p->readAllStandardOutput();
+    qDebug() << "std_out : " << std_out;
+    QString snList = txtHelper.GetSnFromAdb(std_out);
+    QStringList list = snList.split("device");
+    list.removeLast();
+    qDebug() << "list :: " <<list;
+    /*
+    foreach (QString sn, list) {
+        if(!burningList.contains(sn.trimmed())){
+            if(sn.trimmed().isEmpty()){
+                break;
+            }
+            qDebug() << "foreach: " << sn.trimmed();
+            burningList.append(sn.trimmed());
+            //emit getSn(sn.trimmed());
+        }
+    }
+    */
 }
 
 void DetectDevice::Checking()
 {
     while(!DetectDevice::stop){
-        p->start(FlashCommands::FAST_BOOT_PFT, FlashCommands::CmdDevices());
-        p->waitForFinished();
+        //CheckFastboot();
+        CheckADB();
         QThread::sleep(2);
     }
 }
@@ -50,12 +96,7 @@ void DetectDevice::ReadErr()
 
 void DetectDevice::ReadStdOut()
 {
-    QString std_out = p->readAllStandardOutput();
-    //qDebug() << TAG << "\n"<< std_out;
-    QString snList = txtHelper.GetSnFromFastboot(std_out);
-    if(!snList.isNull()){
-        CheckSn(snList);
-    }
+
 }
 
 void DetectDevice::BeginProcess()
