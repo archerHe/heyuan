@@ -18,6 +18,7 @@ public:
     void CheckSnFromAdb();
     void CheckFastboot();
     void CheckADB();
+    QString GetDeviceSnFromSn(QString sn);
     static bool stop;
     static QMap<QString, QString> sn_map;
 
@@ -37,6 +38,7 @@ private:
     TextHelper txtHelper;
     QStringList burningList;
     QStringList mesSnList;
+    FlashCommands cmd;
 
     FlashDevice *device_01;
 };
