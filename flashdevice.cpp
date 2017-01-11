@@ -24,6 +24,7 @@ void FlashDevice::init()
     connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(EndProcess()));
 
     burning_flag = false;
+    isWaiting = true;
 }
 
 int FlashDevice::FlashBootImg(QString sn)
@@ -78,6 +79,24 @@ QString FlashDevice::GetMesSn()
 
 }
 
+bool FlashDevice::isInFastBootMode(QString sn)
+{
+    p->start(FlashCommands::FAST_BOOT_PFT, FlashCommands::CmdDevices());
+    p->waitForFinished();
+    QString std_out = p->readAllStandardOutput();
+    QString snList = textHelper.GetSnFromFastboot(std_out);
+    if(snList.isNull()){
+        qDebug() << "fastboot list is null";
+       return false;
+    }
+    QStringList list = snList.split("fastboot");
+    if(list.contains(sn)){
+        qDebug() << "start fastboot flash sn: " << sn;
+        return true;
+    }
+    return false;
+}
+
 void FlashDevice::ReadErr()
 {
     QString err = p->readAllStandardError();
@@ -115,7 +134,19 @@ void FlashDevice::setBurning_flag(bool value)
 
 void FlashDevice::UpdateDevice(const QString &sn)
 {
+
     burning_flag = true;
+    int count = 20;
+    while(burning_flag){
+        if(isInFastBootMode(sn)){
+            break;
+        }
+        count--;
+        if(count = 0){
+            qDebug() << "wait for sn:"<<sn<<"fastboot mode 20s, time out";
+        }
+        QThread::sleep(1);
+    }
     this->sn = sn;
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&

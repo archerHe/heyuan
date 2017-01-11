@@ -8,6 +8,10 @@
 #include <QFileDialog>
 #include "flashcommands.h"
 #include "burningdevice.h"
+#include <QNetworkAccessManager>
+#include <QTextCodec>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,6 +19,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     InitWidget();
+
+
+    //manager->get(QNetworkRequest(QUrl("http://www.baidu.com")));
 }
 
 MainWindow::~MainWindow()
@@ -23,6 +30,7 @@ MainWindow::~MainWindow()
     DetectDevice::stop = true;
     detect_thread.quit();
     detect_thread.wait();
+    device_manager.deleteLater();
 }
 
 void MainWindow::SelectBurningUI(QString sn)
@@ -48,6 +56,29 @@ void MainWindow::Finished(QString sn)
             burning->setBackbroundColor("green");
         }
     }
+}
+
+void MainWindow::replyFinished(QNetworkReply *reply)
+{
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString result = codec->toUnicode(reply->readAll());
+    //qDebug() << "result" << result;
+    QString fwOS = textHelper.GetFwPathFromReply(result);
+    qDebug() << "fwOS: " << fwOS;
+    if(!fwOS.isEmpty()){
+        //device_map.insert(snForList, fwOS);
+        TextHelper::sn_map.insert(snForList, fwOS);
+        snForList = "";
+    }
+}
+
+void MainWindow::selectFromMes(QString sn)
+{
+    QString mes_sn = GetDeviceSnFromSn(sn.trimmed());
+    snForList = sn.trimmed();
+    manager->get(QNetworkRequest(QUrl(textHelper.GetMesUrl(mes_sn))));
+    qDebug() << "sn: " << sn << "  mes_sn: " << mes_sn;
+
 }
 
 
@@ -89,7 +120,7 @@ void MainWindow::on_btn_fw_selected_clicked()
 
 void MainWindow::InitWidget()
 {
-    //p = new QProcess(this);
+    p = new QProcess(this);
     //connect(p, SIGNAL(started()), this, SLOT(BeginProcess()));
     //connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(ReadStdOut()));
     //connect(p, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()));
@@ -104,6 +135,10 @@ void MainWindow::InitWidget()
     detect_thread.start();
 
     connect(&device_manager, SIGNAL(FlashFinish(QString)), this, SLOT(Finished(QString)));
+
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
+    connect(&device, &DetectDevice::sendSnToMes, this, &MainWindow::selectFromMes);
 
     device_01 = new BurningDevice();
     device_01->setId("burning01");
@@ -145,3 +180,15 @@ void MainWindow::addDeviceUI(const QString &sn)
     SelectBurningUI(sn);
     device_manager.StartFlashDevice(sn);
 }
+
+QString MainWindow::GetDeviceSnFromSn(QString sn)
+{
+   p->start(FlashCommands::ADB_PFT, cmd.CmdAdbGetMesSn(sn));
+   QStringList par;
+   p->start("adb.pft", par);
+   p->waitForFinished();
+   QString result = p->readAll();
+   return result.trimmed();
+}
+
+QMap<QString, QString> MainWindow::device_map;

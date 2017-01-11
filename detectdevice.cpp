@@ -2,6 +2,11 @@
 #include <QDebug>
 #include <QProcess>
 #include <QThread>
+#include <QNetworkAccessManager>
+#include <QUrl>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QTextCodec>
 
 bool DetectDevice::stop = true;
 DetectDevice::DetectDevice(QObject *parent) : QObject(parent)
@@ -13,6 +18,10 @@ DetectDevice::DetectDevice(QObject *parent) : QObject(parent)
     connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(ReadStdOut()));
     connect(p, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()));
     connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(EndProcess()));
+
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
+    //manager->get(QNetworkRequest(QUrl("http://172.16.50.51/SFAPI/api.ashx?type=20&action=getmesbom&sn=HGCC00PM&uid=1&pwd=11")));
 }
 
 DetectDevice::~DetectDevice()
@@ -67,12 +76,22 @@ void DetectDevice::CheckADB()
     list.removeLast();
     qDebug() << "list :: " <<list;
     foreach (QString sn, list) {
-        QString mes_sn = GetDeviceSnFromSn(sn.trimmed());
-        if(mes_sn.isEmpty()){
-            qDebug() << "mes_sn is empty, sn: " << sn;
+        if(!burningList.contains(sn.trimmed())){
+            if(sn.trimmed().isEmpty()){
+                break;
+            }
+            burningList.append(sn.trimmed());
+            p->start(FlashCommands::ADB_PFT, cmd.CmdEnterFastboot(sn));
+            emit sendSnToMes(sn);
+            emit getSn(sn.trimmed());
+        }
+
+        if(sn.isEmpty()){
+            qDebug() << "sn is empty, sn: " << sn;
             continue;
         }
-        sn_map.insert(sn, mes_sn);
+
+        QThread::sleep(2);
     }
 
 }
@@ -87,6 +106,18 @@ QString DetectDevice::GetDeviceSnFromSn(QString sn)
    return result;
 }
 
+QString DetectDevice::GetMesUrl(QString sn)
+{
+    return "";
+
+}
+
+void DetectDevice::GetMesInfo(QString sn)
+{
+    manager->get(QNetworkRequest(QUrl(GetMesUrl(sn))));
+
+}
+
 void DetectDevice::Checking()
 {
     while(!DetectDevice::stop){
@@ -94,6 +125,13 @@ void DetectDevice::Checking()
         CheckADB();
         QThread::sleep(2);
     }
+}
+
+void DetectDevice::replyFinished(QNetworkReply *reply)
+{
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString result = codec->toUnicode(reply->readAll());
+    qDebug() << "result" << result;
 }
 
 void DetectDevice::ReadErr()

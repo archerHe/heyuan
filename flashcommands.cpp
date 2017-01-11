@@ -67,6 +67,13 @@ QStringList FlashCommands::CmdAdbGetMesSn(QString sn)
     return par;
 }
 
+QStringList FlashCommands::CmdEnterFastboot(QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "shell" << "reboot" << "fastboot";
+    return par;
+}
+
 QStringList FlashCommands::CmdAdbGetDeviceSn()
 {
     QStringList par;

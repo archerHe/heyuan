@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     flashcommands.cpp \
     texthelper.cpp \
     detectdevice.cpp \
-    flashdevice.cpp
+    flashdevice.cpp \
+    mesnetwork.cpp
 
 HEADERS  += mainwindow.h \
     burningdevice.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     flashcommands.h \
     texthelper.h \
     detectdevice.h \
-    flashdevice.h
+    flashdevice.h \
+    mesnetwork.h
 
 FORMS    += mainwindow.ui \
     burningdevice.ui

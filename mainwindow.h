@@ -7,9 +7,13 @@
 #include "burningdevice.h"
 #include "flashdevice.h"
 #include "qdeviceflashmanager.h"
+#include "texthelper.h"
+#include <QMap>
 
 class QProcess;
 class QVBoxLayout;
+class QNetworkReply;
+class QNetworkAccessManager;
 
 namespace Ui {
 class MainWindow;
@@ -29,8 +33,12 @@ public:
     BurningDevice *device_02;
     BurningDevice *device_03;
 
+    QString GetDeviceSnFromSn(QString sn);
+
 public slots:
     void Finished(QString sn);
+    void replyFinished(QNetworkReply *reply);
+    void selectFromMes(QString sn);
 
 private slots:
 
@@ -43,6 +51,7 @@ private slots:
     void on_btn_burning_switch_clicked();
 
     void addDeviceUI(const QString& sn);
+
 
 private:
     Ui::MainWindow *ui;
@@ -60,7 +69,12 @@ private:
     //BurningDevice device_01;
     QDeviceFlashManager device_manager;
 
+    QNetworkAccessManager *manager;
+    TextHelper textHelper;
+    static QMap<QString,QString> device_map;
     bool isChecking;
+    QString snForList;
+    FlashCommands cmd;
 
     void InitWidget();
 

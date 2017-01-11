@@ -16,6 +16,7 @@ public:
     QStringList cmdFlashRecovery(QString fw_path, QString sn);
     QStringList CmdFlashContinue(QString sn);
     QStringList CmdAdbGetMesSn(QString sn);
+    QStringList CmdEnterFastboot(QString sn);
     static QStringList CmdAdbGetDeviceSn();
     static QStringList CmdAdbStartServer();
 

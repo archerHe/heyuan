@@ -4,6 +4,7 @@
 #include <QObject>
 #include "flashcommands.h"
 #include <QMutex>
+#include "texthelper.h"
 
 class QProcess;
 class FlashDevice : public QObject
@@ -21,6 +22,8 @@ public:
     int FlashRecovery(QString sn);
     int FlashContinue(QString sn);
     QString GetMesSn();
+
+    bool isInFastBootMode(QString sn);
 
     bool getBurning_flag();
     void setBurning_flag(bool value);
@@ -46,10 +49,11 @@ private:
     QString fw_path;
     FlashCommands *cmd;
 
-
+    bool isWaiting;
     static QStringList burning_list;
     static QStringList burning_sn_list;
 
+    TextHelper textHelper;
 };
 
 #endif // FLASHDEVICE_H
