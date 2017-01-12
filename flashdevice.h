@@ -42,7 +42,6 @@ public slots:
     void UpdateDevice02(const QString &sn);
     void UpdateDevice03(const QString &sn);
 
-
 private:
 
     QProcess *p;

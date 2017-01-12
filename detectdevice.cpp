@@ -21,7 +21,6 @@ DetectDevice::DetectDevice(QObject *parent) : QObject(parent)
 
     manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
-    //manager->get(QNetworkRequest(QUrl("http://172.16.50.51/SFAPI/api.ashx?type=20&action=getmesbom&sn=HGCC00PM&uid=1&pwd=11")));
 }
 
 DetectDevice::~DetectDevice()
@@ -72,6 +71,9 @@ void DetectDevice::CheckADB()
     p->waitForFinished();
     QString std_out = p->readAllStandardOutput();
     QString snList = txtHelper.GetSnFromAdb(std_out);
+    if(snList.isNull()){
+        return;
+    }
     QStringList list = snList.split("device");
     list.removeLast();
     qDebug() << "list :: " <<list;
@@ -81,7 +83,9 @@ void DetectDevice::CheckADB()
                 break;
             }
             burningList.append(sn.trimmed());
-            p->start(FlashCommands::ADB_PFT, cmd.CmdEnterFastboot(sn));
+            p->start(FlashCommands::ADB_PFT, cmd.CmdEnterFastboot(sn.trimmed()));
+            qDebug() << cmd.CmdEnterFastboot(sn);
+            p->waitForFinished();
             emit sendSnToMes(sn);
             emit getSn(sn.trimmed());
         }
@@ -120,6 +124,8 @@ void DetectDevice::GetMesInfo(QString sn)
 
 void DetectDevice::Checking()
 {
+    p->start(cmd.ADB_PFT, cmd.CmdAdbStartServer());
+    p->waitForFinished();
     while(!DetectDevice::stop){
         //CheckFastboot();
         CheckADB();
@@ -147,12 +153,12 @@ void DetectDevice::ReadStdOut()
 
 void DetectDevice::BeginProcess()
 {
-    qDebug() << TAG << "start process";
+ //   qDebug() << TAG << "start process";
 }
 
 void DetectDevice::EndProcess()
 {
-    qDebug() << TAG << "exitStatus: " << p->exitStatus();
+//    qDebug() << TAG << "exitStatus: " << p->exitStatus();
     if(p->exitStatus() == QProcess::NormalExit)
     {
         //qDebug() << TAG <<"normal end";

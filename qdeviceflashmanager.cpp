@@ -58,7 +58,7 @@ void QDeviceFlashManager::StartFlashDevice(QString sn)
 
 void QDeviceFlashManager::FinishFlash(QString sn)
 {
-    qDebug() << "FinishFlash.. " << sn;
+    qDebug() << "QDeviceFlashManager FinishFlash.. " << sn;
 
     foreach (FlashDevice *device, deviceList)
     {

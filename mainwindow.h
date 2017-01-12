@@ -61,7 +61,7 @@ private:
     QStringList burningList;
     QThread detect_thread;
     DetectDevice device;
-    QList<BurningDevice *> list;
+    QList<BurningDevice *> burning_ui_list;
 
     FlashDevice flash_device_01;
     QThread device_thread_01;

@@ -26,11 +26,11 @@ QString TextHelper::GetSnFromFastboot(QString result)
 
 QString TextHelper::GetSnFromAdb(QString result)
 {
-    if(result.isEmpty()){
-        qDebug() << "GetSnFromAdb result is empty";
+    QStringList strList = result.trimmed().split("\n");
+    if(strList.length() == 1){
+        qDebug() << "GetSnFromAdb not adb devices";
         return NULL;
     }
-    QStringList strList = result.trimmed().split("\n");
     if(strList.length() > 1){
         strList.removeFirst();
     }

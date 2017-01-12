@@ -36,12 +36,13 @@ MainWindow::~MainWindow()
 void MainWindow::SelectBurningUI(QString sn)
 {
     qDebug() << "SelectBurningUI";
-    foreach (BurningDevice *burning, list) {
+    foreach (BurningDevice *burning, burning_ui_list) {
         if(!burning->getBurning_flag()){
             qDebug() << "id: " << burning->getId();
             burning->SetSn(sn);
             burning->show();
             burning->setBurning_flag(true);
+            burning->setBackbroundColor("blue");
             return;
         }
     }
@@ -49,8 +50,8 @@ void MainWindow::SelectBurningUI(QString sn)
 
 void MainWindow::Finished(QString sn)
 {
-    qDebug() << "Finished sn: " << sn;
-    foreach (BurningDevice *burning, list) {
+    qDebug() << "MainWindow finished : " << sn;
+    foreach (BurningDevice *burning, burning_ui_list) {
         if(burning->device_sn == sn){
             burning->SetSn("");
             burning->setBackbroundColor("green");
@@ -153,7 +154,7 @@ void MainWindow::InitWidget()
     v_layout->addWidget(device_02);
     v_layout->addWidget(device_03);
 
-    list << device_01 << device_02 << device_03;
+    burning_ui_list << device_01 << device_02 << device_03;
 
 }
 
@@ -184,6 +185,7 @@ void MainWindow::addDeviceUI(const QString &sn)
 QString MainWindow::GetDeviceSnFromSn(QString sn)
 {
    p->start(FlashCommands::ADB_PFT, cmd.CmdAdbGetMesSn(sn));
+   qDebug() << "cat.. "<< cmd.CmdAdbGetMesSn(sn);
    QStringList par;
    p->start("adb.pft", par);
    p->waitForFinished();

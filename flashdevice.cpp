@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QThread>
 #include <QMutex>
+#include <QTimer>
 
 FlashDevice::FlashDevice(QObject *parent) : QObject(parent)
 {
@@ -85,28 +86,31 @@ bool FlashDevice::isInFastBootMode(QString sn)
     p->waitForFinished();
     QString std_out = p->readAllStandardOutput();
     QString snList = textHelper.GetSnFromFastboot(std_out);
+    qDebug() << "fastboot devices: " << snList;
     if(snList.isNull()){
         qDebug() << "fastboot list is null";
        return false;
     }
     QStringList list = snList.split("fastboot");
-    if(list.contains(sn)){
-        qDebug() << "start fastboot flash sn: " << sn;
-        return true;
+    foreach (QString sn, list) {
+        if(sn.trimmed() == sn.trimmed()){
+            qDebug() << "start fastboot flash sn: " << sn;
+            return true;
+        }
     }
     return false;
 }
 
 void FlashDevice::ReadErr()
 {
-    QString err = p->readAllStandardError();
+    //QString err = p->readAllStandardError();
     //qDebug() << "err" << err;
 }
 
 void FlashDevice::ReadStdOut()
 {
-    QString std_out = p->readAllStandardOutput();
-    qDebug() << "std_out" << std_out;
+    //QString std_out = p->readAllStandardOutput();
+    //qDebug() << "std_out" << std_out;
 }
 
 void FlashDevice::BeginProcess()
@@ -116,10 +120,10 @@ void FlashDevice::BeginProcess()
 
 void FlashDevice::EndProcess()
 {
-    qDebug() << "exitStatus: " << p->exitStatus();
+    //qDebug() << "exitStatus: " << p->exitStatus();
     if(p->exitStatus() == QProcess::NormalExit)
     {
-        qDebug() << "normal end";
+      //  qDebug() << "normal end";
     }
 }
 bool FlashDevice::getBurning_flag()
@@ -134,50 +138,70 @@ void FlashDevice::setBurning_flag(bool value)
 
 void FlashDevice::UpdateDevice(const QString &sn)
 {
-
+    this->sn = sn;
+    qDebug() << "updateDevice sn: " << sn;
     burning_flag = true;
-    int count = 20;
+    int count = 25;
     while(burning_flag){
         if(isInFastBootMode(sn)){
             break;
         }
         count--;
-        if(count = 0){
+        //qDebug() << "count: " << count;
+        if(count == 0){
             qDebug() << "wait for sn:"<<sn<<"fastboot mode 20s, time out";
+            return;
         }
         QThread::sleep(1);
     }
-    this->sn = sn;
-    if((FlashUnlock(sn) == 0) &&
-            (FlashBootImg(sn) == 0) &&
-//            (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0) &&
-            (FlashLock(sn) == 0)){
-        qDebug()<< "UpdateDevice sn:" << sn << " successful";
-        FlashContinue(sn);
-        burning_flag = false;
-        emit FinishedFlash(sn);
-    }else{
-        qDebug()<< "UpdateDevice sn:" << sn << " fail";
-    }
-}
 
-void FlashDevice::UpdateDevice02(const QString &sn)
-{
-    burning_flag = true;
-    this->sn = sn;
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
  //           (FlashSystem(sn) == 0) &&
             (FlashRecovery(sn) == 0) &&
             (FlashLock(sn) == 0)){
+        qDebug()<< "UpdateDevice sn:" << sn << " successful";
+        FlashContinue(sn);
+
+        emit FinishedFlash(sn);
+    }else{
+
+        qDebug()<< "UpdateDevice sn:" << sn << " fail";
+    }
+    burning_flag = false;
+}
+
+void FlashDevice::UpdateDevice02(const QString &sn)
+{
+    this->sn = sn;
+    qDebug() << "updateDevice02 sn: " << sn;
+    burning_flag = true;
+    int count = 25;
+    while(burning_flag){
+        if(isInFastBootMode(sn)){
+            break;
+        }
+        count--;
+        //qDebug() << "count: " << count;
+        if(count == 0){
+            qDebug() << "wait for sn:"<<sn<<"fastboot mode 20s, time out";
+            return;
+        }
+        QThread::sleep(1);
+    }
+
+    if((FlashUnlock(sn) == 0) &&
+            (FlashBootImg(sn) == 0) &&
+            (FlashSystem(sn) == 0) &&
+            (FlashRecovery(sn) == 0) &&
+            (FlashLock(sn) == 0)){
         qDebug()<< "UpdateDevice02 sn:"<< sn << "  successful";
         FlashContinue(sn);
-        burning_flag = false;
         emit FinishedFlash(sn);
     }else{
         qDebug() << "UpdateDevice02 sn:"<< sn << " fail";
     }
+    burning_flag = false;
 }
 
 void FlashDevice::UpdateDevice03(const QString &sn)
@@ -197,6 +221,8 @@ void FlashDevice::UpdateDevice03(const QString &sn)
         qDebug() << "UpdateDevice03 sn:"<< sn << "  fail";
     }
 }
+
+
 
 QStringList FlashDevice::burning_list;
 QStringList FlashDevice::burning_sn_list;
