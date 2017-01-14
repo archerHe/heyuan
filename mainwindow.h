@@ -34,6 +34,7 @@ public:
     BurningDevice *device_03;
 
     QString GetDeviceSnFromSn(QString sn);
+    void UpdateDeviceUI(QString sn);
 
 public slots:
     void Finished(QString sn);
@@ -66,7 +67,6 @@ private:
     FlashDevice flash_device_01;
     QThread device_thread_01;
 
-    //BurningDevice device_01;
     QDeviceFlashManager device_manager;
 
     QNetworkAccessManager *manager;

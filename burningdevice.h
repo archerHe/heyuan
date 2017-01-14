@@ -20,6 +20,8 @@ public:
 
     void InitView();
     void SetSn(QString sn);
+    void SetFwVer(QString ver);
+    void SetMesSn(QString mesSn);
 
 
     QString getId() const;

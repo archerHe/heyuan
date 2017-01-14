@@ -16,7 +16,8 @@ public:
     QString GetMesUrl(QString sn);
     QString GetFwPathFromReply(QString result);
 
-    static QMap<QString, QString> sn_map;
+    static QMap<QString, QString> sn_fw_map;
+    static QMap<QString, QString> sn_mesSn_map;
 
 private:
 

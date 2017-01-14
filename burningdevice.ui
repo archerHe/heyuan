@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>745</width>
-    <height>64</height>
+    <width>755</width>
+    <height>94</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -33,7 +33,7 @@
     <item>
      <widget class="QLabel" name="lbl_sn">
       <property name="text">
-       <string>OS SN:</string>
+       <string>device id:</string>
       </property>
      </widget>
     </item>
@@ -58,13 +58,6 @@
      </spacer>
     </item>
     <item>
-     <widget class="QPushButton" name="btn_switch">
-      <property name="text">
-       <string>Start</string>
-      </property>
-     </widget>
-    </item>
-    <item>
      <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -81,6 +74,70 @@
      <widget class="QProgressBar" name="pgb_burning">
       <property name="value">
        <number>0</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>50</y>
+     <width>271</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QLabel" name="lbl_mes_sn">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>mes sn:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="mes_sn">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>50</y>
+     <width>381</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+     <widget class="QLabel" name="lbl_fw">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>fw ver:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="fw_ver">
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </item>

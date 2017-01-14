@@ -83,18 +83,19 @@ void DetectDevice::CheckADB()
                 break;
             }
             burningList.append(sn.trimmed());
+            emit sendSnToMes(sn);
+            emit getSn(sn.trimmed());
+            QThread::sleep(1);
             p->start(FlashCommands::ADB_PFT, cmd.CmdEnterFastboot(sn.trimmed()));
             qDebug() << cmd.CmdEnterFastboot(sn);
             p->waitForFinished();
-            emit sendSnToMes(sn);
-            emit getSn(sn.trimmed());
+
         }
 
         if(sn.isEmpty()){
             qDebug() << "sn is empty, sn: " << sn;
             continue;
         }
-
         QThread::sleep(2);
     }
 

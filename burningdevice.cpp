@@ -13,7 +13,6 @@ BurningDevice::BurningDevice(QWidget *parent) :
 {
     ui->setupUi(this);
     burning_flag = false;
-
 }
 
 BurningDevice::~BurningDevice()
@@ -31,6 +30,16 @@ void BurningDevice::SetSn(QString sn)
 {
     device_sn = sn;
     ui->sn->setText(sn);
+}
+
+void BurningDevice::SetFwVer(QString ver)
+{
+    ui->fw_ver->setText(ver);
+}
+
+void BurningDevice::SetMesSn(QString mesSn)
+{
+    ui->mes_sn->setText(mesSn);
 }
 QString BurningDevice::getId() const
 {

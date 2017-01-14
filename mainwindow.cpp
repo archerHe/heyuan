@@ -67,9 +67,10 @@ void MainWindow::replyFinished(QNetworkReply *reply)
     QString fwOS = textHelper.GetFwPathFromReply(result);
     qDebug() << "fwOS: " << fwOS;
     if(!fwOS.isEmpty()){
-        //device_map.insert(snForList, fwOS);
-        TextHelper::sn_map.insert(snForList, fwOS);
+        TextHelper::sn_fw_map.insert(snForList, fwOS);
+        UpdateDeviceUI(snForList);
         snForList = "";
+
     }
 }
 
@@ -77,6 +78,7 @@ void MainWindow::selectFromMes(QString sn)
 {
     QString mes_sn = GetDeviceSnFromSn(sn.trimmed());
     snForList = sn.trimmed();
+    TextHelper::sn_mesSn_map.insert(sn.trimmed(), mes_sn);
     manager->get(QNetworkRequest(QUrl(textHelper.GetMesUrl(mes_sn))));
     qDebug() << "sn: " << sn << "  mes_sn: " << mes_sn;
 
@@ -190,7 +192,22 @@ QString MainWindow::GetDeviceSnFromSn(QString sn)
    p->start("adb.pft", par);
    p->waitForFinished();
    QString result = p->readAll();
+   qDebug() << "err: "<< p->readAllStandardError();
    return result.trimmed();
+}
+
+void MainWindow::UpdateDeviceUI(QString sn)
+{
+    foreach (BurningDevice *burning, burning_ui_list) {
+        if(burning->device_sn == sn){
+            QMap<QString, QString>::Iterator it = TextHelper::sn_mesSn_map.find(sn);
+            QString mesSn = it.value();
+            burning->SetMesSn(mesSn);
+            QMap<QString, QString>::Iterator it_fw = TextHelper::sn_fw_map.find(sn);
+            QString snFw = it_fw.value();
+            burning->SetFwVer(snFw);
+        }
+    }
 }
 
 QMap<QString, QString> MainWindow::device_map;

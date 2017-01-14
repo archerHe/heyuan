@@ -58,4 +58,5 @@ QString TextHelper::GetFwPathFromReply(QString result)
 }
 
 
-QMap<QString, QString> TextHelper::sn_map;
+QMap<QString, QString> TextHelper::sn_fw_map;
+QMap<QString, QString> TextHelper::sn_mesSn_map;
