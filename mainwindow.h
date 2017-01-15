@@ -32,6 +32,9 @@ public:
     BurningDevice *device_01;
     BurningDevice *device_02;
     BurningDevice *device_03;
+    BurningDevice *device_04;
+    BurningDevice *device_05;
+    BurningDevice *device_06;
 
     QString GetDeviceSnFromSn(QString sn);
     void UpdateDeviceUI(QString sn);
@@ -42,13 +45,6 @@ public slots:
     void selectFromMes(QString sn);
 
 private slots:
-
-    void ReadErr();
-    void ReadStdOut();
-    void BeginProcess();
-    void EndProcess();
-
-    void on_btn_fw_selected_clicked();
     void on_btn_burning_switch_clicked();
 
     void addDeviceUI(const QString& sn);

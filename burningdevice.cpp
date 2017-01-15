@@ -65,8 +65,6 @@ void BurningDevice::setBackbroundColor(QString color)
     this->setStyleSheet("background-color:" + color);
 }
 
-
-
 void BurningDevice::readyFlash()
 {
 

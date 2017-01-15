@@ -19,9 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     InitWidget();
-
-
-    //manager->get(QNetworkRequest(QUrl("http://www.baidu.com")));
 }
 
 MainWindow::~MainWindow()
@@ -42,7 +39,7 @@ void MainWindow::SelectBurningUI(QString sn)
             burning->SetSn(sn);
             burning->show();
             burning->setBurning_flag(true);
-            burning->setBackbroundColor("blue");
+            burning->setBackbroundColor("rgb(176,226,255)");
             return;
         }
     }
@@ -54,7 +51,7 @@ void MainWindow::Finished(QString sn)
     foreach (BurningDevice *burning, burning_ui_list) {
         if(burning->device_sn == sn){
             burning->SetSn("");
-            burning->setBackbroundColor("green");
+            burning->setBackbroundColor("rgb(85,90,205)");
         }
     }
 }
@@ -84,51 +81,9 @@ void MainWindow::selectFromMes(QString sn)
 
 }
 
-
-void MainWindow::ReadErr()
-{
-    QString err = p->readAllStandardError();
-    qDebug() << err;
-}
-
-void MainWindow::ReadStdOut()
-{
-    QString std_out = p->readAllStandardOutput();
-    qDebug() << std_out;
-}
-
-void MainWindow::BeginProcess()
-{
-    qDebug() << "start process";
-}
-
-void MainWindow::EndProcess()
-{
-    qDebug() << "exitStatus: " << p->exitStatus();
-    if(p->exitStatus() == QProcess::NormalExit)
-    {
-        qDebug() << "normal end";
-    }
-}
-
-void MainWindow::on_btn_fw_selected_clicked()
-{
-    QString fw_path = QFileDialog::getExistingDirectory(this);
-    if(fw_path.isEmpty()){
-        qDebug() << "firmware path is empty";
-        return;
-    }
-    ui->le_fw->setText(fw_path);
-}
-
 void MainWindow::InitWidget()
 {
     p = new QProcess(this);
-    //connect(p, SIGNAL(started()), this, SLOT(BeginProcess()));
-    //connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(ReadStdOut()));
-    //connect(p, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()));
-    //connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(EndProcess()));
-    //connect(dectect_thread, SIGNAL(hasDevice()), this, SLOT(addDeviceUI(QString)));
 
     v_layout = new QVBoxLayout();
     ui->scrollAreaWidgetContents->setLayout(v_layout);
@@ -149,14 +104,26 @@ void MainWindow::InitWidget()
     device_02->setId("burning02");
     device_03 = new BurningDevice();
     device_03->setId("burning03");
+    device_04 = new BurningDevice();
+    device_04->setId("burning04");
+    device_05 = new BurningDevice();
+    device_05->setId("burning05");
+    device_06 = new BurningDevice();
+    device_06->setId("burning06");
     device_01->hide();
     device_02->hide();
     device_03->hide();
+    device_04->hide();
+    device_05->hide();
+    device_06->hide();
     v_layout->addWidget(device_01);
     v_layout->addWidget(device_02);
     v_layout->addWidget(device_03);
+    v_layout->addWidget(device_04);
+    v_layout->addWidget(device_05);
+    v_layout->addWidget(device_06);
 
-    burning_ui_list << device_01 << device_02 << device_03;
+    burning_ui_list << device_01 << device_02 << device_03 << device_04 << device_05 << device_06;
 
 }
 
@@ -175,11 +142,6 @@ void MainWindow::on_btn_burning_switch_clicked()
 void MainWindow::addDeviceUI(const QString &sn)
 {
     qDebug() << "addDeviceUI";
-    /*
-    BurningDevice *device_01 = new BurningDevice();
-    device_01->SetSn(sn);
-    v_layout->addWidget(device_01);
-    */
     SelectBurningUI(sn);
     device_manager.StartFlashDevice(sn);
 }

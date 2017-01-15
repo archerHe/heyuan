@@ -157,7 +157,7 @@ void FlashDevice::UpdateDevice(const QString &sn)
 
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
- //           (FlashSystem(sn) == 0) &&
+            (FlashSystem(sn) == 0) &&
             (FlashRecovery(sn) == 0) &&
             (FlashLock(sn) == 0)){
         qDebug()<< "UpdateDevice sn:" << sn << " successful";
@@ -182,9 +182,8 @@ void FlashDevice::UpdateDevice02(const QString &sn)
             break;
         }
         count--;
-        //qDebug() << "count: " << count;
         if(count == 0){
-            qDebug() << "wait for sn:"<<sn<<"fastboot mode 20s, time out";
+            qDebug() << "wait for sn:"<<sn<<"fastboot mode 25s, time out";
             return;
         }
         QThread::sleep(1);
@@ -206,20 +205,130 @@ void FlashDevice::UpdateDevice02(const QString &sn)
 
 void FlashDevice::UpdateDevice03(const QString &sn)
 {
-    burning_flag = true;
     this->sn = sn;
+    qDebug() << "updateDevice03 sn: " << sn;
+    burning_flag = true;
+    int count = 25;
+    while(burning_flag){
+        if(isInFastBootMode(sn)){
+            break;
+        }
+        count--;
+        if(count == 0){
+            qDebug() << "wait for sn:"<<sn<<"fastboot mode 25s, time out";
+            return;
+        }
+        QThread::sleep(1);
+    }
+
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
- //           (FlashSystem(sn) == 0) &&
+            (FlashSystem(sn) == 0) &&
             (FlashRecovery(sn) == 0) &&
             (FlashLock(sn) == 0)){
         qDebug()<< "UpdateDevice03 sn:"<< sn << "  successful";
         FlashContinue(sn);
-        burning_flag = false;
         emit FinishedFlash(sn);
     }else{
-        qDebug() << "UpdateDevice03 sn:"<< sn << "  fail";
+        qDebug() << "UpdateDevice03 sn:"<< sn << " fail";
     }
+    burning_flag = false;
+}
+
+void FlashDevice::UpdateDevice04(const QString &sn)
+{
+    this->sn = sn;
+    qDebug() << "updateDevice04 sn: " << sn;
+    burning_flag = true;
+    int count = 25;
+    while(burning_flag){
+        if(isInFastBootMode(sn)){
+            break;
+        }
+        count--;
+        if(count == 0){
+            qDebug() << "wait for sn:"<<sn<<"fastboot mode 25s, time out";
+            return;
+        }
+        QThread::sleep(1);
+    }
+
+    if((FlashUnlock(sn) == 0) &&
+            (FlashBootImg(sn) == 0) &&
+            (FlashSystem(sn) == 0) &&
+            (FlashRecovery(sn) == 0) &&
+            (FlashLock(sn) == 0)){
+        qDebug()<< "UpdateDevice04 sn:"<< sn << "  successful";
+        FlashContinue(sn);
+        emit FinishedFlash(sn);
+    }else{
+        qDebug() << "UpdateDevice04 sn:"<< sn << " fail";
+    }
+    burning_flag = false;
+}
+
+void FlashDevice::UpdateDevice05(const QString &sn)
+{
+    this->sn = sn;
+    qDebug() << "updateDevice05 sn: " << sn;
+    burning_flag = true;
+    int count = 25;
+    while(burning_flag){
+        if(isInFastBootMode(sn)){
+            break;
+        }
+        count--;
+        if(count == 0){
+            qDebug() << "wait for sn:"<<sn<<"fastboot mode 25s, time out";
+            return;
+        }
+        QThread::sleep(1);
+    }
+
+    if((FlashUnlock(sn) == 0) &&
+            (FlashBootImg(sn) == 0) &&
+            (FlashSystem(sn) == 0) &&
+            (FlashRecovery(sn) == 0) &&
+            (FlashLock(sn) == 0)){
+        qDebug()<< "UpdateDevice05 sn:"<< sn << "  successful";
+        FlashContinue(sn);
+        emit FinishedFlash(sn);
+    }else{
+        qDebug() << "UpdateDevice05 sn:"<< sn << " fail";
+    }
+    burning_flag = false;
+}
+
+void FlashDevice::UpdateDevice06(const QString &sn)
+{
+    this->sn = sn;
+    qDebug() << "updateDevice06 sn: " << sn;
+    burning_flag = true;
+    int count = 25;
+    while(burning_flag){
+        if(isInFastBootMode(sn)){
+            break;
+        }
+        count--;
+        if(count == 0){
+            qDebug() << "wait for sn:"<<sn<<"fastboot mode 25s, time out";
+            return;
+        }
+        QThread::sleep(1);
+    }
+
+    if((FlashUnlock(sn) == 0) &&
+            (FlashBootImg(sn) == 0) &&
+            (FlashSystem(sn) == 0) &&
+            (FlashRecovery(sn) == 0) &&
+            (FlashLock(sn) == 0)){
+        qDebug()<< "UpdateDevice06 sn:"<< sn << "  successful";
+        FlashContinue(sn);
+        emit FinishedFlash(sn);
+    }else{
+        qDebug() << "UpdateDevice06 sn:"<< sn << " fail";
+    }
+    burning_flag = false;
 }
 
 

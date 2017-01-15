@@ -14,12 +14,16 @@ public:
     explicit QDeviceFlashManager(QObject *parent = 0);
     ~QDeviceFlashManager();
 
+    void init();
+
     void StartFlashDevice(QString sn);
 signals:
     void startFlash(const QString &sn);
     void startFlash02(const QString &sn);
     void startFlash03(const QString &sn);
     void startFlash04(const QString &sn);
+    void startFlash05(const QString &sn);
+    void startFlash06(const QString &sn);
 
     void FlashFinish(QString sn);
 public slots:
@@ -35,6 +39,10 @@ private:
     QThread thread_03;
     FlashDevice *device_04;
     QThread thread_04;
+    FlashDevice *device_05;
+    QThread thread_05;
+    FlashDevice *device_06;
+    QThread thread_06;
 
 };
 

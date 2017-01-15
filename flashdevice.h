@@ -41,6 +41,9 @@ public slots:
     void UpdateDevice(const QString &sn);
     void UpdateDevice02(const QString &sn);
     void UpdateDevice03(const QString &sn);
+    void UpdateDevice04(const QString &sn);
+    void UpdateDevice05(const QString &sn);
+    void UpdateDevice06(const QString &sn);
 
 private:
 
