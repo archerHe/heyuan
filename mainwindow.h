@@ -9,6 +9,7 @@
 #include "qdeviceflashmanager.h"
 #include "texthelper.h"
 #include <QMap>
+#include "settingfwver.h"
 
 class QProcess;
 class QVBoxLayout;
@@ -50,6 +51,8 @@ private slots:
     void addDeviceUI(const QString& sn);
 
 
+    void on_actionFw_ver_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -71,6 +74,7 @@ private:
     bool isChecking;
     QString snForList;
     FlashCommands cmd;
+    SettingFwVer *fw_widget;
 
     void InitWidget();
 

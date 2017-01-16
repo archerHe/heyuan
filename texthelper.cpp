@@ -60,3 +60,7 @@ QString TextHelper::GetFwPathFromReply(QString result)
 
 QMap<QString, QString> TextHelper::sn_fw_map;
 QMap<QString, QString> TextHelper::sn_mesSn_map;
+
+QString TextHelper::ROW_OS_PATH;
+QString TextHelper::PRC_OS_PATH;
+QString TextHelper::LTE_OS_PATH;

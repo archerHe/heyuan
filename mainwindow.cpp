@@ -12,6 +12,8 @@
 #include <QTextCodec>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QDesktopWidget>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -125,10 +127,15 @@ void MainWindow::InitWidget()
 
     burning_ui_list << device_01 << device_02 << device_03 << device_04 << device_05 << device_06;
 
+    fw_widget = new SettingFwVer();
 }
 
 void MainWindow::on_btn_burning_switch_clicked()
 {
+    if(TextHelper::ROW_OS_PATH.isEmpty() && TextHelper::LTE_OS_PATH.isEmpty() && TextHelper::PRC_OS_PATH.isEmpty()){
+        QMessageBox::warning(this, "notice", "os path it not setting");
+        return;
+    }
     if(!DetectDevice::stop){
         DetectDevice::stop = true;
         ui->btn_burning_switch->setText("Start");
@@ -173,3 +180,12 @@ void MainWindow::UpdateDeviceUI(QString sn)
 }
 
 QMap<QString, QString> MainWindow::device_map;
+
+void MainWindow::on_actionFw_ver_triggered()
+{
+    fw_widget->show();
+    fw_widget->move ((QApplication::desktop()->width() - fw_widget->width())/2,(QApplication::desktop()->height() - fw_widget->height())/2);
+    //fw_widget->setWindowFlags(fw_widget->windowFlags()&~Qt::WindowMaximizeButtonHint);
+    //QDesktopWidget *dw = QApplication::desktop();
+    //fw_widget->setFixedSize(dw->width()*0.5, dw->height()*0.5);
+}

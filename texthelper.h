@@ -19,6 +19,9 @@ public:
     static QMap<QString, QString> sn_fw_map;
     static QMap<QString, QString> sn_mesSn_map;
 
+    static QString ROW_OS_PATH;
+    static QString PRC_OS_PATH;
+    static QString LTE_OS_PATH;
 private:
 
 };
