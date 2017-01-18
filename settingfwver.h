@@ -14,7 +14,7 @@ class SettingFwVer : public QWidget
 public:
     explicit SettingFwVer(QWidget *parent = 0);
     ~SettingFwVer();
-
+    void init();
 private slots:
     void on_btn_row_clicked();
 

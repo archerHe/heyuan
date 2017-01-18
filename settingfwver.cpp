@@ -10,11 +10,25 @@ SettingFwVer::SettingFwVer(QWidget *parent) :
     ui(new Ui::SettingFwVer)
 {
     ui->setupUi(this);
+    init();
 }
 
 SettingFwVer::~SettingFwVer()
 {
     delete ui;
+}
+
+void SettingFwVer::init()
+{
+    if(!TextHelper::ROW_OS_PATH.isEmpty()){
+        ui->le_row->setText(TextHelper::ROW_OS_PATH);
+    }
+    if(!TextHelper::LTE_OS_PATH.isEmpty()){
+        ui->le_lte->setText(TextHelper::LTE_OS_PATH);
+    }
+    if(!TextHelper::PRC_OS_PATH.isEmpty()){
+        ui->le_prc->setText(TextHelper::PRC_OS_PATH);
+    }
 }
 
 void SettingFwVer::on_btn_row_clicked()

@@ -184,7 +184,7 @@ QMap<QString, QString> MainWindow::device_map;
 void MainWindow::on_actionFw_ver_triggered()
 {
     fw_widget->show();
-    fw_widget->move ((QApplication::desktop()->width() - fw_widget->width())/2,(QApplication::desktop()->height() - fw_widget->height())/2);
+    fw_widget->move((QApplication::desktop()->width() - fw_widget->width())/2,(QApplication::desktop()->height() - fw_widget->height())/2);
     //fw_widget->setWindowFlags(fw_widget->windowFlags()&~Qt::WindowMaximizeButtonHint);
     //QDesktopWidget *dw = QApplication::desktop();
     //fw_widget->setFixedSize(dw->width()*0.5, dw->height()*0.5);
