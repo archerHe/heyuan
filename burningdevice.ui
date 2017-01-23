@@ -79,12 +79,12 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>40</x>
      <y>50</y>
-     <width>271</width>
+     <width>171</width>
      <height>19</height>
     </rect>
    </property>
@@ -111,13 +111,13 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>230</x>
      <y>50</y>
-     <width>381</width>
-     <height>19</height>
+     <width>481</width>
+     <height>20</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -130,7 +130,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>fw ver:</string>
+       <string>OS ver:</string>
       </property>
      </widget>
     </item>

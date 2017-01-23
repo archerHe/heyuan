@@ -14,6 +14,8 @@
 #include <QNetworkReply>
 #include <QDesktopWidget>
 #include <QMessageBox>
+#include <QSettings>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -53,7 +55,9 @@ void MainWindow::Finished(QString sn)
     foreach (BurningDevice *burning, burning_ui_list) {
         if(burning->device_sn == sn){
             burning->SetSn("");
+            burning->setBurning_flag(false);
             burning->setBackbroundColor("rgb(85,90,205)");
+            burning->hide();
         }
     }
 }
@@ -65,6 +69,7 @@ void MainWindow::replyFinished(QNetworkReply *reply)
     //qDebug() << "result" << result;
     QString fwOS = textHelper.GetFwPathFromReply(result);
     qDebug() << "fwOS: " << fwOS;
+    qDebug() << "snForList: " << snForList;
     if(!fwOS.isEmpty()){
         TextHelper::sn_fw_map.insert(snForList, fwOS);
         UpdateDeviceUI(snForList);
@@ -81,6 +86,17 @@ void MainWindow::selectFromMes(QString sn)
     manager->get(QNetworkRequest(QUrl(textHelper.GetMesUrl(mes_sn))));
     qDebug() << "sn: " << sn << "  mes_sn: " << mes_sn;
 
+}
+
+void MainWindow::removeUI(QString sn)
+{
+    foreach (BurningDevice *burning, burning_ui_list) {
+        if(burning->device_sn == sn){
+            burning->SetSn("");
+            burning->hide();
+            burning->setBurning_flag(false);
+        }
+    }
 }
 
 void MainWindow::InitWidget()
@@ -127,7 +143,17 @@ void MainWindow::InitWidget()
 
     burning_ui_list << device_01 << device_02 << device_03 << device_04 << device_05 << device_06;
 
+    initFwPath();
+
     fw_widget = new SettingFwVer();
+}
+
+void MainWindow::initFwPath()
+{
+    QSettings *settings = new QSettings("cfg.ini", QSettings::IniFormat);
+    TextHelper::ROW_OS_PATH = settings->value("row", "").toString();
+    TextHelper::LTE_OS_PATH = settings->value("lte", "").toString();
+    TextHelper::PRC_OS_PATH = settings->value("prc", "").toString();
 }
 
 void MainWindow::on_btn_burning_switch_clicked()
@@ -185,7 +211,5 @@ void MainWindow::on_actionFw_ver_triggered()
 {
     fw_widget->show();
     fw_widget->move((QApplication::desktop()->width() - fw_widget->width())/2,(QApplication::desktop()->height() - fw_widget->height())/2);
-    //fw_widget->setWindowFlags(fw_widget->windowFlags()&~Qt::WindowMaximizeButtonHint);
-    //QDesktopWidget *dw = QApplication::desktop();
-    //fw_widget->setFixedSize(dw->width()*0.5, dw->height()*0.5);
+
 }

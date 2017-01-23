@@ -30,7 +30,8 @@ void FlashDevice::init()
 
 int FlashDevice::FlashBootImg(QString sn)
 {
-    p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashBoot(FlashCommands::FW, sn));
+    QString fw = getFwPath(sn);
+    p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashBoot(fw, sn));
     p->waitForFinished();
     qDebug() << "FlashBootImg exitcode: " << p->exitCode();
     return p->exitCode();
@@ -46,7 +47,8 @@ int FlashDevice::FlashUnlock(QString sn)
 
 int FlashDevice::FlashSystem(QString sn)
 {
-    p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashSystem(FlashCommands::FW, sn));
+    QString fw = getFwPath(sn);
+    p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashSystem(fw, sn));
     p->waitForFinished(400000);
     qDebug() << "FlashSystem exitcode: " << p->exitCode();
     return p->exitCode();
@@ -62,7 +64,8 @@ int FlashDevice::FlashLock(QString sn)
 
 int FlashDevice::FlashRecovery(QString sn)
 {
-    p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashRecovery(FlashCommands::FW, sn));
+    QString fw = getFwPath(sn);
+    p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashRecovery(fw, sn));
     p->waitForFinished();
     qDebug() << "FlashRecovery exitcode: " << p->exitCode();
     return p->exitCode();
@@ -134,6 +137,24 @@ bool FlashDevice::getBurning_flag()
 void FlashDevice::setBurning_flag(bool value)
 {
     burning_flag = value;
+}
+
+QString FlashDevice::getFwPath(QString sn)
+{
+    if(TextHelper::sn_fw_map.contains(sn.trimmed())){
+        QMap<QString,QString>::iterator it = TextHelper::sn_fw_map.find(sn.trimmed());
+        QString fw_name = it.value();
+        if(fw_name.contains("PRC")){
+            return TextHelper::PRC_OS_PATH;
+        }else if(fw_name.contains("ROW") && fw_name.contains("501F")){
+            return TextHelper::ROW_OS_PATH;
+        }else if(fw_name.contains("501L")){
+            return TextHelper::LTE_OS_PATH;
+        }
+    }else{
+        qDebug() << sn << "  is not in sn_fw_map";
+        return "";
+    }
 }
 
 void FlashDevice::UpdateDevice(const QString &sn)

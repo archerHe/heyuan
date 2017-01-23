@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include "texthelper.h"
+#include <QSettings>
 
 SettingFwVer::SettingFwVer(QWidget *parent) :
     QWidget(parent),
@@ -69,5 +70,9 @@ void SettingFwVer::on_btn_exit_clicked()
     TextHelper::ROW_OS_PATH = ui->le_row->text();
     TextHelper::LTE_OS_PATH = ui->le_lte->text();
     TextHelper::PRC_OS_PATH = ui->le_prc->text();
+    QSettings *settings = new QSettings("cfg.ini", QSettings::IniFormat);
+    settings->setValue("row", TextHelper::ROW_OS_PATH);
+    settings->setValue("lte", TextHelper::LTE_OS_PATH);
+    settings->setValue("prc", TextHelper::PRC_OS_PATH);
     this->close();
 }

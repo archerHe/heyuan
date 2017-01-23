@@ -15,7 +15,7 @@ class QProcess;
 class QVBoxLayout;
 class QNetworkReply;
 class QNetworkAccessManager;
-
+class QTimer;
 namespace Ui {
 class MainWindow;
 }
@@ -44,6 +44,8 @@ public slots:
     void Finished(QString sn);
     void replyFinished(QNetworkReply *reply);
     void selectFromMes(QString sn);
+
+    void removeUI(QString sn);
 
 private slots:
     void on_btn_burning_switch_clicked();
@@ -75,8 +77,10 @@ private:
     QString snForList;
     FlashCommands cmd;
     SettingFwVer *fw_widget;
+    QTimer *timer;
 
     void InitWidget();
+    void initFwPath();
 
 signals:
     void deviceIsChecked(const QString sn);

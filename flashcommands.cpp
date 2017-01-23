@@ -90,5 +90,4 @@ QStringList FlashCommands::CmdAdbStartServer()
 
 const QString FlashCommands::FAST_BOOT_PFT = "fastboot.pft";
 const QString FlashCommands::ADB_PFT = "adb.pft";
-const QString FlashCommands::FW = "/SSD/AndroidSrc/T2000A_wifi/out/target/product/r2_cht_ffd/fast_flashfiles";
-//QMap FlashCommands::sn_map;
+

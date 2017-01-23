@@ -28,6 +28,8 @@ public:
     bool getBurning_flag();
     void setBurning_flag(bool value);
 
+    QString getFwPath(QString sn);
+
     bool burning_flag;
     QString sn;
     const QString id = "A";

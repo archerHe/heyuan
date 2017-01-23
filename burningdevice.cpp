@@ -13,6 +13,7 @@ BurningDevice::BurningDevice(QWidget *parent) :
 {
     ui->setupUi(this);
     burning_flag = false;
+    ui->pgb_burning->hide();
 }
 
 BurningDevice::~BurningDevice()
