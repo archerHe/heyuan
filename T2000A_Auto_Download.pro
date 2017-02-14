@@ -20,7 +20,6 @@ SOURCES += main.cpp\
     texthelper.cpp \
     detectdevice.cpp \
     flashdevice.cpp \
-    mesnetwork.cpp \
     settingfwver.cpp
 
 HEADERS  += mainwindow.h \
@@ -30,7 +29,6 @@ HEADERS  += mainwindow.h \
     texthelper.h \
     detectdevice.h \
     flashdevice.h \
-    mesnetwork.h \
     settingfwver.h
 
 FORMS    += mainwindow.ui \

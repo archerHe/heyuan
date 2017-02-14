@@ -74,6 +74,20 @@ QStringList FlashCommands::CmdEnterFastboot(QString sn)
     return par;
 }
 
+QStringList FlashCommands::CmdFlashBootloader(QString fw_path, QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "flash" << "bootloader" << fw_path + "/bootloader";
+    return par;
+}
+
+QStringList FlashCommands::CmdFlashBootloaderOemvars(QString fw_path, QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "flash" << "oemvars" << fw_path + "/bootloader_policy-oemvars.txt";
+    return par;
+}
+
 QStringList FlashCommands::CmdAdbGetDeviceSn()
 {
     QStringList par;

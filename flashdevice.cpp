@@ -33,7 +33,7 @@ int FlashDevice::FlashBootImg(QString sn)
     QString fw = getFwPath(sn);
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashBoot(fw, sn));
     p->waitForFinished();
-    qDebug() << "FlashBootImg exitcode: " << p->exitCode();
+    //qDebug() << "FlashBootImg exitcode: " << p->exitCode();
     return p->exitCode();
 }
 
@@ -50,7 +50,7 @@ int FlashDevice::FlashSystem(QString sn)
     QString fw = getFwPath(sn);
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashSystem(fw, sn));
     p->waitForFinished(400000);
-    qDebug() << "FlashSystem exitcode: " << p->exitCode();
+    //qDebug() << "FlashSystem exitcode: " << p->exitCode();
     return p->exitCode();
 }
 
@@ -58,7 +58,7 @@ int FlashDevice::FlashLock(QString sn)
 {
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashLock(sn));
     p->waitForFinished();
-    qDebug() << "lock exitcode: " << p->exitCode();
+    //qDebug() << "lock exitcode: " << p->exitCode();
     return p->exitCode();
 }
 
@@ -67,7 +67,25 @@ int FlashDevice::FlashRecovery(QString sn)
     QString fw = getFwPath(sn);
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashRecovery(fw, sn));
     p->waitForFinished();
-    qDebug() << "FlashRecovery exitcode: " << p->exitCode();
+    //qDebug() << "FlashRecovery exitcode: " << p->exitCode();
+    return p->exitCode();
+}
+
+int FlashDevice::FlashBootloaderOemvars(QString sn)
+{
+    QString fw = getFwPath(sn);
+    p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashBootloaderOemvars(fw, sn));
+    p->waitForFinished();
+    //qDebug() << "Flash bootloader oems var exitcode: " << p->exitCode();
+    return p->exitCode();
+}
+
+int FlashDevice::FlashBootloader(QString sn)
+{
+    QString fw = getFwPath(sn);
+    p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashBootloader(fw, sn));
+    p->waitForFinished();
+    //qDebug() << "Flash bootloader exitcode: " << p->exitCode();
     return p->exitCode();
 }
 
@@ -78,10 +96,6 @@ int FlashDevice::FlashContinue(QString sn)
     return p->exitCode();
 }
 
-QString FlashDevice::GetMesSn()
-{
-
-}
 
 bool FlashDevice::isInFastBootMode(QString sn)
 {

@@ -20,8 +20,9 @@ public:
     int FlashSystem(QString sn);
     int FlashLock(QString sn);
     int FlashRecovery(QString sn);
+    int FlashBootloaderOemvars(QString sn);
+    int FlashBootloader(QString sn);
     int FlashContinue(QString sn);
-    QString GetMesSn();
 
     bool isInFastBootMode(QString sn);
 
