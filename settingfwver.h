@@ -24,6 +24,10 @@ private slots:
 
     void on_btn_exit_clicked();
 
+    void on_btn_passwd_clicked();
+
+    void on_ckb_bootloader_clicked();
+
 private:
     Ui::SettingFwVer *ui;
 };

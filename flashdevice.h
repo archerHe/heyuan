@@ -7,6 +7,9 @@
 #include "texthelper.h"
 
 class QProcess;
+class QNetworkReply;
+class QNetworkAccessManager;
+
 class FlashDevice : public QObject
 {
     Q_OBJECT
@@ -30,10 +33,13 @@ public:
     void setBurning_flag(bool value);
 
     QString getFwPath(QString sn);
-
+    
+    bool CheckStation(QString sn);
+    bool CompleteStation(QString sn);
+    
     bool burning_flag;
     QString sn;
-    const QString id = "A";
+
 signals:
     void FinishedFlash(QString sn);
 public slots:
@@ -48,11 +54,14 @@ public slots:
     void UpdateDevice05(const QString &sn);
     void UpdateDevice06(const QString &sn);
 
+    void replyFinished(QNetworkReply *reply);
+
 private:
 
     QProcess *p;
     QString fw_path;
     FlashCommands *cmd;
+    QNetworkAccessManager *manager;
 
     bool isWaiting;
     static QStringList burning_list;

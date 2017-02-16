@@ -4,6 +4,11 @@
 #include <QThread>
 #include <QMutex>
 #include <QTimer>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
+#include <QTextCodec>
+#include <QEventLoop>
 
 FlashDevice::FlashDevice(QObject *parent) : QObject(parent)
 {
@@ -26,6 +31,9 @@ void FlashDevice::init()
 
     burning_flag = false;
     isWaiting = true;
+
+    manager = new QNetworkAccessManager(this);
+    //connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
 }
 
 int FlashDevice::FlashBootImg(QString sn)
@@ -103,9 +111,9 @@ bool FlashDevice::isInFastBootMode(QString sn)
     p->waitForFinished();
     QString std_out = p->readAllStandardOutput();
     QString snList = textHelper.GetSnFromFastboot(std_out);
-    qDebug() << "fastboot devices: " << snList;
+    //qDebug() << "fastboot devices: " << snList;
     if(snList.isNull()){
-        qDebug() << "fastboot list is null";
+        //qDebug() << "fastboot list is null";
        return false;
     }
     QStringList list = snList.split("fastboot");
@@ -165,9 +173,53 @@ QString FlashDevice::getFwPath(QString sn)
         }else if(fw_name.contains("501L")){
             return TextHelper::LTE_OS_PATH;
         }
+    }
+    qDebug() << sn << "  is not in sn_fw_map";
+    return "";
+}
+
+bool FlashDevice::CheckStation(QString sn)
+{
+    QMap<QString, QString>::Iterator it = TextHelper::sn_mesSn_map.find(sn);
+    QString mesSn = it.value();
+    QString strUrl = "http://172.16.50.51/SFAPI/api.ashx?type=20&action=start&sn=" + mesSn + "&station=" + TextHelper::STATION_NAME + "&uid=1&pwd=11";
+    qDebug() << "check station url: " << strUrl;
+    QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(strUrl)));
+    QEventLoop eventLoop;
+    connect(manager, &QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString result = codec->toUnicode(reply->readAll());
+    qDebug() << "result" << result;
+    if(result.at(0) == '1'){
+        qDebug() << "check_station_result true";
+        return true;
     }else{
-        qDebug() << sn << "  is not in sn_fw_map";
-        return "";
+        qDebug() << "check_station_result false";
+        return false;
+    }
+}
+
+bool FlashDevice::CompleteStation(QString sn)
+{
+    QMap<QString, QString>::Iterator it = TextHelper::sn_mesSn_map.find(sn);
+    QString mesSn = it.value();
+
+    QString strUrl = "http://172.16.50.51/SFAPI/api.ashx?type=20&action=complete&sn=" + mesSn + "&station=" + TextHelper::STATION_NAME + "&uid=1&pwd=11";
+    qDebug() << "complete station url: " << strUrl;
+    QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(strUrl)));
+    QEventLoop eventLoop;
+    connect(manager, &QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString result = codec->toUnicode(reply->readAll());
+    qDebug() << "result" << result;
+    if(result.at(0) == '1'){
+        qDebug() << "complete station true";
+        return true;
+    }else{
+        qDebug() << "complete station false";
+        return false;
     }
 }
 
@@ -182,7 +234,6 @@ void FlashDevice::UpdateDevice(const QString &sn)
             break;
         }
         count--;
-        //qDebug() << "count: " << count;
         if(count == 0){
             qDebug() << "wait for sn:"<<sn<<"fastboot mode 20s, time out";
             return;
@@ -190,14 +241,33 @@ void FlashDevice::UpdateDevice(const QString &sn)
         QThread::sleep(1);
     }
 
+    //if(!CheckStation(sn)){
+   //     return;
+   // }
+
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0) &&
+            (FlashRecovery(sn) == 0)){
+        if(TextHelper::IS_NEED_FLASH_BIOS){
+            if((FlashBootloader(sn) == 0) &&
             (FlashLock(sn) == 0)){
-        qDebug()<< "UpdateDevice sn:" << sn << " successful";
-        FlashContinue(sn);
+                qDebug() << sn << "  flash bootloader successful";
+            }else{
+                qDebug() << "flash bootloader fail";
+                return;
+            }
+        }else{
+            if(FlashLock(sn) != 0){
+                qDebug() << sn << " lock fail";
+                return;
+            }
+        }
 
+        if(!CompleteStation(sn)){
+            return;
+        }
+        FlashContinue(sn);
         emit FinishedFlash(sn);
     }else{
 
@@ -223,13 +293,27 @@ void FlashDevice::UpdateDevice02(const QString &sn)
         }
         QThread::sleep(1);
     }
+    if(!CheckStation(sn)){
+        return;
+    }
 
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
-            (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0) &&
+ //           (FlashSystem(sn) == 0) &&
+            (FlashRecovery(sn) == 0)){
+        if(TextHelper::IS_NEED_FLASH_BIOS){
+            if((FlashBootloader(sn) == 0) &&
             (FlashLock(sn) == 0)){
-        qDebug()<< "UpdateDevice02 sn:"<< sn << "  successful";
+                qDebug() << sn << "  flash bootloader successful";
+            }else{
+                qDebug() << sn << "  flash bootloader fail";
+                return;
+            }
+        }
+
+        if(!CompleteStation(sn)){
+            return;
+        }
         FlashContinue(sn);
         emit FinishedFlash(sn);
     }else{
@@ -364,6 +448,13 @@ void FlashDevice::UpdateDevice06(const QString &sn)
         qDebug() << "UpdateDevice06 sn:"<< sn << " fail";
     }
     burning_flag = false;
+}
+
+void FlashDevice::replyFinished(QNetworkReply *reply)
+{
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString result = codec->toUnicode(reply->readAll());
+    qDebug() << "result" << result;
 }
 
 

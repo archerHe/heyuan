@@ -14,7 +14,7 @@ TextHelper::~TextHelper()
 QString TextHelper::GetSnFromFastboot(QString result)
 {
     if(result.isEmpty()){
-        qDebug() << "GetSnFromFastboot result is empty";
+        //qDebug() << "GetSnFromFastboot result is empty";
         return NULL;
     }
     if(result.contains("fastboot")){
@@ -28,7 +28,7 @@ QString TextHelper::GetSnFromAdb(QString result)
 {
     QStringList strList = result.trimmed().split("\n");
     if(strList.length() == 1){
-        qDebug() << "GetSnFromAdb not adb devices";
+        //qDebug() << "GetSnFromAdb not adb devices";
         return NULL;
     }
     if(strList.length() > 1){
@@ -64,3 +64,5 @@ QMap<QString, QString> TextHelper::sn_mesSn_map;
 QString TextHelper::ROW_OS_PATH;
 QString TextHelper::PRC_OS_PATH;
 QString TextHelper::LTE_OS_PATH;
+bool TextHelper::IS_NEED_FLASH_BIOS = false;
+QString TextHelper::STATION_NAME = "dlos";

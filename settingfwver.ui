@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>581</width>
-    <height>267</height>
+    <width>733</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
     <string>save and  exit</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -55,7 +55,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>25</x>
@@ -84,7 +84,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>25</x>
@@ -110,6 +110,79 @@
        <string>select...</string>
       </property>
      </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="btn_passwd">
+   <property name="geometry">
+    <rect>
+     <x>580</x>
+     <y>110</y>
+     <width>99</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enter</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="ckb_bootloader">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>200</y>
+     <width>97</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Flash BIOS</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>40</y>
+     <width>148</width>
+     <height>52</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="lbl_passwd">
+      <property name="text">
+       <string>Passwd:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="le_passwd"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>200</y>
+     <width>160</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <widget class="QLabel" name="lbl_station_name">
+      <property name="text">
+       <string>station name:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="le_station_name"/>
     </item>
    </layout>
   </widget>

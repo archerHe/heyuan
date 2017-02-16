@@ -80,6 +80,7 @@ private:
     QTimer *timer;
 
     void InitWidget();
+    bool isConnectedMes();
     void initFwPath();
 
 signals:

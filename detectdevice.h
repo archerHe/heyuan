@@ -23,9 +23,9 @@ public:
     void CheckSnFromAdb();
     void CheckFastboot();
     void CheckADB();
+    bool CheckStation(QString sn);
     QString GetDeviceSnFromSn(QString sn);
-    QString GetMesUrl(QString sn);
-    void GetMesInfo(QString sn);
+
 
     static bool stop;
     static QMap<QString, QString> sn_map;
@@ -43,7 +43,7 @@ public slots:
 
 private:
     QProcess *p;
-    const QString TAG = "DetectDevice";
+    QString TAG;
     TextHelper txtHelper;
     QStringList burningList;
     QStringList mesSnList;

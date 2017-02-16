@@ -22,6 +22,8 @@ public:
     static QString ROW_OS_PATH;
     static QString PRC_OS_PATH;
     static QString LTE_OS_PATH;
+    static bool IS_NEED_FLASH_BIOS;
+    static QString STATION_NAME;
 private:
 
 };

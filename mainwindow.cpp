@@ -23,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     InitWidget();
+    if(!isConnectedMes()){
+        QMessageBox::critical(this, "notice", " can not connect mes server");
+    }
 }
 
 MainWindow::~MainWindow()
@@ -32,6 +35,8 @@ MainWindow::~MainWindow()
     detect_thread.quit();
     detect_thread.wait();
     device_manager.deleteLater();
+
+
 }
 
 void MainWindow::SelectBurningUI(QString sn)
@@ -66,7 +71,6 @@ void MainWindow::replyFinished(QNetworkReply *reply)
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
     QString result = codec->toUnicode(reply->readAll());
-    //qDebug() << "result" << result;
     QString fwOS = textHelper.GetFwPathFromReply(result);
     qDebug() << "fwOS: " << fwOS;
     qDebug() << "snForList: " << snForList;
@@ -74,7 +78,6 @@ void MainWindow::replyFinished(QNetworkReply *reply)
         TextHelper::sn_fw_map.insert(snForList, fwOS);
         UpdateDeviceUI(snForList);
         snForList = "";
-
     }
 }
 
@@ -145,7 +148,35 @@ void MainWindow::InitWidget()
 
     initFwPath();
 
+    QSettings *settings = new QSettings("cfg.ini", QSettings::IniFormat);
+    if(settings->contains("station_name")){
+        TextHelper::STATION_NAME = settings->value("station_name").toString();
+    }
+    if(settings->contains("is_update_bios")){
+        TextHelper::IS_NEED_FLASH_BIOS = settings->value("is_update_bios").toBool();
+    }
+
     fw_widget = new SettingFwVer();
+}
+
+bool MainWindow::isConnectedMes()
+{
+    disconnect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
+    QNetworkReply* reply = manager->get(QNetworkRequest(QUrl("http://172.16.50.51/SFAPI/api.ashx?type=20&action=start&sn=HGCC03GY&station=WRTSN&uid=1&pwd=11")));
+    QEventLoop eventLoop;
+    connect(manager, &QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString result = codec->toUnicode(reply->readAll());
+    qDebug() << "result" << result;
+    disconnect(manager,&QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
+    if(result.trimmed().isEmpty()){
+        qDebug() << "connect mes fail";
+        return false;
+    }
+    qDebug() << "connect mes successfully";
+    return true;
 }
 
 void MainWindow::initFwPath()

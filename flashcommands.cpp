@@ -63,7 +63,7 @@ QStringList FlashCommands::CmdFlashContinue(QString sn)
 QStringList FlashCommands::CmdAdbGetMesSn(QString sn)
 {
     QStringList par;
-    par << "-s" << sn << "shell" << "cat" << "/sdcard/.sn";
+    par << "-s" << sn << "shell" << "cat" << "/sdcard/Android/.deviceSn";
     return par;
 }
 

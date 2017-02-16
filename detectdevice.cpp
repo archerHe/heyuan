@@ -7,6 +7,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QTextCodec>
+#include <QEventLoop>
 
 bool DetectDevice::stop = true;
 DetectDevice::DetectDevice(QObject *parent) : QObject(parent)
@@ -20,7 +21,7 @@ DetectDevice::DetectDevice(QObject *parent) : QObject(parent)
     connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(EndProcess()));
 
     manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
+    TAG = "DetectDevice";
 }
 
 DetectDevice::~DetectDevice()
@@ -84,10 +85,14 @@ void DetectDevice::CheckADB()
             }
             burningList.append(sn.trimmed());
             emit sendSnToMes(sn);
+
+            QThread::sleep(2);
+            if(!CheckStation(sn)){
+                return;
+            }
             emit getSn(sn.trimmed());
-            QThread::sleep(1);
             p->start(FlashCommands::ADB_PFT, cmd.CmdEnterFastboot(sn.trimmed()));
-            qDebug() << cmd.CmdEnterFastboot(sn);
+            //qDebug() << cmd.CmdEnterFastboot(sn);
             p->waitForFinished();
 
         }
@@ -101,6 +106,28 @@ void DetectDevice::CheckADB()
 
 }
 
+bool DetectDevice::CheckStation(QString sn)
+{
+    QMap<QString, QString>::Iterator it = TextHelper::sn_mesSn_map.find(sn.trimmed());
+    QString mesSn = it.value();
+    QString strUrl = "http://172.16.50.51/SFAPI/api.ashx?type=20&action=start&sn=" + mesSn + "&station=" + TextHelper::STATION_NAME + "&uid=1&pwd=11";
+    qDebug() << "check station url: " << strUrl;
+    QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(strUrl)));
+    QEventLoop eventLoop;
+    connect(manager, &QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString result = codec->toUnicode(reply->readAll());
+    qDebug() << "result" << result;
+    if(result.at(0) == '1'){
+        qDebug() << "check_station_result true";
+        return true;
+    }else{
+        qDebug() << "check_station_result false";
+        return false;
+    }
+}
+
 QString DetectDevice::GetDeviceSnFromSn(QString sn)
 {
    p->start(FlashCommands::ADB_PFT, cmd.CmdAdbGetMesSn(sn));
@@ -111,17 +138,6 @@ QString DetectDevice::GetDeviceSnFromSn(QString sn)
    return result;
 }
 
-QString DetectDevice::GetMesUrl(QString sn)
-{
-    return "";
-
-}
-
-void DetectDevice::GetMesInfo(QString sn)
-{
-    manager->get(QNetworkRequest(QUrl(GetMesUrl(sn))));
-
-}
 
 void DetectDevice::Checking()
 {
