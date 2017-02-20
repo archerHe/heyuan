@@ -87,9 +87,12 @@ void DetectDevice::CheckADB()
             emit sendSnToMes(sn);
 
             QThread::sleep(2);
-            if(!CheckStation(sn)){
-                return;
+            if(!TextHelper::IS_OFFLINE_MODE){
+                if(!CheckStation(sn)){
+                    return;
+                }
             }
+
             emit getSn(sn.trimmed());
             p->start(FlashCommands::ADB_PFT, cmd.CmdEnterFastboot(sn.trimmed()));
             //qDebug() << cmd.CmdEnterFastboot(sn);

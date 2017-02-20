@@ -24,6 +24,8 @@ public:
     static QString LTE_OS_PATH;
     static bool IS_NEED_FLASH_BIOS;
     static QString STATION_NAME;
+    static QString OFFLINE_OS_PATH;
+    static bool IS_OFFLINE_MODE;
 private:
 
 };

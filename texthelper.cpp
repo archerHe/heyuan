@@ -64,5 +64,7 @@ QMap<QString, QString> TextHelper::sn_mesSn_map;
 QString TextHelper::ROW_OS_PATH;
 QString TextHelper::PRC_OS_PATH;
 QString TextHelper::LTE_OS_PATH;
+QString TextHelper::OFFLINE_OS_PATH;
+bool TextHelper::IS_OFFLINE_MODE = false;
 bool TextHelper::IS_NEED_FLASH_BIOS = false;
 QString TextHelper::STATION_NAME = "dlos";

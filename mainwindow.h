@@ -16,6 +16,8 @@ class QVBoxLayout;
 class QNetworkReply;
 class QNetworkAccessManager;
 class QTimer;
+class QLabel;
+
 namespace Ui {
 class MainWindow;
 }
@@ -55,6 +57,8 @@ private slots:
 
     void on_actionFw_ver_triggered();
 
+    void on_actionOffline_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -78,7 +82,7 @@ private:
     FlashCommands cmd;
     SettingFwVer *fw_widget;
     QTimer *timer;
-
+    QLabel *lbl_status_bar_left;
     void InitWidget();
     bool isConnectedMes();
     void initFwPath();

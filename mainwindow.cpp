@@ -105,7 +105,6 @@ void MainWindow::removeUI(QString sn)
 void MainWindow::InitWidget()
 {
     p = new QProcess(this);
-
     v_layout = new QVBoxLayout();
     ui->scrollAreaWidgetContents->setLayout(v_layout);
     device.moveToThread(&detect_thread);
@@ -147,6 +146,8 @@ void MainWindow::InitWidget()
     burning_ui_list << device_01 << device_02 << device_03 << device_04 << device_05 << device_06;
 
     initFwPath();
+    lbl_status_bar_left = new QLabel();
+    ui->statusBar->addWidget(lbl_status_bar_left);
 
     QSettings *settings = new QSettings("cfg.ini", QSettings::IniFormat);
     if(settings->contains("station_name")){
@@ -154,6 +155,23 @@ void MainWindow::InitWidget()
     }
     if(settings->contains("is_update_bios")){
         TextHelper::IS_NEED_FLASH_BIOS = settings->value("is_update_bios").toBool();
+    }
+    if(settings->contains("offline_fw_path")){
+        TextHelper::OFFLINE_OS_PATH = settings->value("offline_fw_path").toString();
+        qDebug() << "offline os path: " << TextHelper::OFFLINE_OS_PATH;
+    }
+    if(settings->contains("is_offline_mode")){
+        TextHelper::IS_OFFLINE_MODE = settings->value("is_offline_mode").toBool();
+        ui->actionOffline->setChecked(TextHelper::IS_OFFLINE_MODE);
+        qDebug() << "offmode: " << TextHelper::IS_OFFLINE_MODE;
+    }
+
+    if(ui->actionOffline->isChecked()){
+        TextHelper::IS_OFFLINE_MODE = true;
+        lbl_status_bar_left->setText("offline mode");
+    }else{
+        TextHelper::IS_OFFLINE_MODE = false;
+        lbl_status_bar_left->setText("online mode");
     }
 
     fw_widget = new SettingFwVer();
@@ -189,10 +207,13 @@ void MainWindow::initFwPath()
 
 void MainWindow::on_btn_burning_switch_clicked()
 {
-    if(TextHelper::ROW_OS_PATH.isEmpty() && TextHelper::LTE_OS_PATH.isEmpty() && TextHelper::PRC_OS_PATH.isEmpty()){
-        QMessageBox::warning(this, "notice", "os path it not setting");
-        return;
+    if(!TextHelper::IS_OFFLINE_MODE){
+        if(TextHelper::ROW_OS_PATH.isEmpty() && TextHelper::LTE_OS_PATH.isEmpty() && TextHelper::PRC_OS_PATH.isEmpty()){
+            QMessageBox::warning(this, "notice", "os path it not setting");
+            return;
+        }
     }
+
     if(!DetectDevice::stop){
         DetectDevice::stop = true;
         ui->btn_burning_switch->setText("Start");
@@ -243,4 +264,17 @@ void MainWindow::on_actionFw_ver_triggered()
     fw_widget->show();
     fw_widget->move((QApplication::desktop()->width() - fw_widget->width())/2,(QApplication::desktop()->height() - fw_widget->height())/2);
 
+}
+
+void MainWindow::on_actionOffline_triggered()
+{
+    if(ui->actionOffline->isChecked()){
+        TextHelper::IS_OFFLINE_MODE = true;
+        ui->statusBar->showMessage("offline mode");
+    }else{
+        TextHelper::IS_OFFLINE_MODE = false;
+        ui->statusBar->showMessage("online mode");
+    }
+    QSettings *settings = new QSettings("cfg.ini", QSettings::IniFormat);
+    settings->setValue("is_offline_mode", TextHelper::IS_OFFLINE_MODE);
 }

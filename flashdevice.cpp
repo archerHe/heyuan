@@ -38,7 +38,12 @@ void FlashDevice::init()
 
 int FlashDevice::FlashBootImg(QString sn)
 {
-    QString fw = getFwPath(sn);
+    QString fw;
+    if(TextHelper::IS_OFFLINE_MODE){
+        fw = TextHelper::OFFLINE_OS_PATH;
+    }else{
+        fw = getFwPath(sn);
+    }
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashBoot(fw, sn));
     p->waitForFinished();
     //qDebug() << "FlashBootImg exitcode: " << p->exitCode();
@@ -55,7 +60,12 @@ int FlashDevice::FlashUnlock(QString sn)
 
 int FlashDevice::FlashSystem(QString sn)
 {
-    QString fw = getFwPath(sn);
+    QString fw;
+    if(TextHelper::IS_OFFLINE_MODE){
+        fw = TextHelper::OFFLINE_OS_PATH;
+    }else{
+        fw = getFwPath(sn);
+    }
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashSystem(fw, sn));
     p->waitForFinished(400000);
     //qDebug() << "FlashSystem exitcode: " << p->exitCode();
@@ -72,7 +82,12 @@ int FlashDevice::FlashLock(QString sn)
 
 int FlashDevice::FlashRecovery(QString sn)
 {
-    QString fw = getFwPath(sn);
+    QString fw;
+    if(TextHelper::IS_OFFLINE_MODE){
+        fw = TextHelper::OFFLINE_OS_PATH;
+    }else{
+        fw = getFwPath(sn);
+    }
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->cmdFlashRecovery(fw, sn));
     p->waitForFinished();
     //qDebug() << "FlashRecovery exitcode: " << p->exitCode();
@@ -81,7 +96,12 @@ int FlashDevice::FlashRecovery(QString sn)
 
 int FlashDevice::FlashBootloaderOemvars(QString sn)
 {
-    QString fw = getFwPath(sn);
+    QString fw;
+    if(TextHelper::IS_OFFLINE_MODE){
+        fw = TextHelper::OFFLINE_OS_PATH;
+    }else{
+        fw = getFwPath(sn);
+    }
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashBootloaderOemvars(fw, sn));
     p->waitForFinished();
     //qDebug() << "Flash bootloader oems var exitcode: " << p->exitCode();
@@ -90,7 +110,12 @@ int FlashDevice::FlashBootloaderOemvars(QString sn)
 
 int FlashDevice::FlashBootloader(QString sn)
 {
-    QString fw = getFwPath(sn);
+    QString fw;
+    if(TextHelper::IS_OFFLINE_MODE){
+        fw = TextHelper::OFFLINE_OS_PATH;
+    }else{
+        fw = getFwPath(sn);
+    }
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashBootloader(fw, sn));
     p->waitForFinished();
     //qDebug() << "Flash bootloader exitcode: " << p->exitCode();
@@ -263,10 +288,12 @@ void FlashDevice::UpdateDevice(const QString &sn)
                 return;
             }
         }
-
-        if(!CompleteStation(sn)){
-            return;
+        if(!TextHelper::IS_OFFLINE_MODE){
+            if(!CompleteStation(sn)){
+                return;
+            }
         }
+
         FlashContinue(sn);
         emit FinishedFlash(sn);
     }else{

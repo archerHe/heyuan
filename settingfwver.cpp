@@ -33,9 +33,11 @@ void SettingFwVer::init()
     ui->le_row->setReadOnly(true);
     ui->le_lte->setReadOnly(true);
     ui->le_prc->setReadOnly(true);
+    ui->le_offline_fw->setReadOnly(true);
     ui->btn_row->hide();
     ui->btn_lte->hide();
     ui->btn_prc->hide();
+    ui->btn_select_offline_fw->hide();
     ui->btn_exit->hide();
     ui->ckb_bootloader->setDisabled(true);
 
@@ -45,6 +47,9 @@ void SettingFwVer::init()
     }
     if(settings->contains("is_update_bios")){
         ui->ckb_bootloader->setChecked(settings->value("is_update_bios").toBool());
+    }
+    if(settings->contains("offline_fw_path")){
+        ui->le_offline_fw->setText(settings->value("offline_fw_path").toString());
     }
 }
 
@@ -95,6 +100,12 @@ void SettingFwVer::on_btn_exit_clicked()
         TextHelper::STATION_NAME = ui->le_station_name->text().trimmed();
     }
     settings->setValue("is_update_bios", ui->ckb_bootloader->isChecked());
+
+    if(!ui->le_offline_fw->text().trimmed().isEmpty()){
+        settings->setValue("offline_fw_path", ui->le_offline_fw->text().trimmed());
+        TextHelper::OFFLINE_OS_PATH = ui->le_offline_fw->text().trimmed();
+    }
+
     this->close();
 }
 
@@ -111,6 +122,7 @@ void SettingFwVer::on_btn_passwd_clicked()
         ui->lbl_passwd->hide();
         ui->le_passwd->hide();
         ui->btn_passwd->hide();
+        ui->btn_select_offline_fw->show();
         ui->ckb_bootloader->setEnabled(true);
     }else{
         ui->le_passwd->clear();
@@ -125,4 +137,15 @@ void SettingFwVer::on_ckb_bootloader_clicked()
     }else{
         TextHelper::IS_NEED_FLASH_BIOS = false;
     }
+}
+
+void SettingFwVer::on_btn_select_offline_fw_clicked()
+{
+    QFileDialog *fileDlg = new QFileDialog();
+    QString offline_path = fileDlg->getExistingDirectory(this);
+    if(!QFile::exists(offline_path + "/system.img")){
+        QMessageBox::warning(this, "notice", "os not found!!!!");
+        return;
+    }
+    ui->le_offline_fw->setText(offline_path);
 }

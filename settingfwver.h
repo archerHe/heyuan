@@ -28,6 +28,8 @@ private slots:
 
     void on_ckb_bootloader_clicked();
 
+    void on_btn_select_offline_fw_clicked();
+
 private:
     Ui::SettingFwVer *ui;
 };
