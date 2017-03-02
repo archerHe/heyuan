@@ -104,6 +104,7 @@ void MainWindow::removeUI(QString sn)
 
 void MainWindow::InitWidget()
 {
+    this->setWindowTitle(TextHelper::VERSION);
     p = new QProcess(this);
     v_layout = new QVBoxLayout();
     ui->scrollAreaWidgetContents->setLayout(v_layout);
@@ -270,10 +271,10 @@ void MainWindow::on_actionOffline_triggered()
 {
     if(ui->actionOffline->isChecked()){
         TextHelper::IS_OFFLINE_MODE = true;
-        ui->statusBar->showMessage("offline mode");
+        lbl_status_bar_left->setText("offline mode");
     }else{
         TextHelper::IS_OFFLINE_MODE = false;
-        ui->statusBar->showMessage("online mode");
+        lbl_status_bar_left->setText("online mode");
     }
     QSettings *settings = new QSettings("cfg.ini", QSettings::IniFormat);
     settings->setValue("is_offline_mode", TextHelper::IS_OFFLINE_MODE);
