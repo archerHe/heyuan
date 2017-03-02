@@ -28,12 +28,9 @@ void FlashDevice::init()
     connect(p, SIGNAL(readyReadStandardOutput()), this, SLOT(ReadStdOut()));
     connect(p, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()));
     connect(p, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(EndProcess()));
-
     burning_flag = false;
     isWaiting = true;
-
     manager = new QNetworkAccessManager(this);
-    //connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
 }
 
 int FlashDevice::FlashBootImg(QString sn)
@@ -266,10 +263,6 @@ void FlashDevice::UpdateDevice(const QString &sn)
         QThread::sleep(1);
     }
 
-    //if(!CheckStation(sn)){
-   //     return;
-   // }
-
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
@@ -293,8 +286,8 @@ void FlashDevice::UpdateDevice(const QString &sn)
                 return;
             }
         }
-
         FlashContinue(sn);
+        qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
     }else{
 
@@ -320,13 +313,10 @@ void FlashDevice::UpdateDevice02(const QString &sn)
         }
         QThread::sleep(1);
     }
-    if(!CheckStation(sn)){
-        return;
-    }
 
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
- //           (FlashSystem(sn) == 0) &&
+            (FlashSystem(sn) == 0) &&
             (FlashRecovery(sn) == 0)){
         if(TextHelper::IS_NEED_FLASH_BIOS){
             if((FlashBootloader(sn) == 0) &&
@@ -336,12 +326,19 @@ void FlashDevice::UpdateDevice02(const QString &sn)
                 qDebug() << sn << "  flash bootloader fail";
                 return;
             }
+        }else{
+            if(FlashLock(sn) != 0){
+                qDebug() << sn << " lock fail";
+                return;
+            }
         }
-
-        if(!CompleteStation(sn)){
-            return;
+        if(!TextHelper::IS_OFFLINE_MODE){
+            if(!CompleteStation(sn)){
+                return;
+            }
         }
         FlashContinue(sn);
+        qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
     }else{
         qDebug() << "UpdateDevice02 sn:"<< sn << " fail";
@@ -370,13 +367,32 @@ void FlashDevice::UpdateDevice03(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0) &&
+            (FlashRecovery(sn) == 0)){
+        if(TextHelper::IS_NEED_FLASH_BIOS){
+            if((FlashBootloader(sn) == 0) &&
             (FlashLock(sn) == 0)){
-        qDebug()<< "UpdateDevice03 sn:"<< sn << "  successful";
+                qDebug() << sn << "  flash bootloader successful";
+            }else{
+                qDebug() << "flash bootloader fail";
+                return;
+            }
+        }else{
+            if(FlashLock(sn) != 0){
+                qDebug() << sn << " lock fail";
+                return;
+            }
+        }
+        if(!TextHelper::IS_OFFLINE_MODE){
+            if(!CompleteStation(sn)){
+                return;
+            }
+        }
         FlashContinue(sn);
+        qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
     }else{
-        qDebug() << "UpdateDevice03 sn:"<< sn << " fail";
+
+        qDebug()<< "UpdateDevice03 sn:" << sn << " fail";
     }
     burning_flag = false;
 }
@@ -402,13 +418,32 @@ void FlashDevice::UpdateDevice04(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0) &&
+            (FlashRecovery(sn) == 0)){
+        if(TextHelper::IS_NEED_FLASH_BIOS){
+            if((FlashBootloader(sn) == 0) &&
             (FlashLock(sn) == 0)){
-        qDebug()<< "UpdateDevice04 sn:"<< sn << "  successful";
+                qDebug() << sn << "  flash bootloader successful";
+            }else{
+                qDebug() << "flash bootloader fail";
+                return;
+            }
+        }else{
+            if(FlashLock(sn) != 0){
+                qDebug() << sn << " lock fail";
+                return;
+            }
+        }
+        if(!TextHelper::IS_OFFLINE_MODE){
+            if(!CompleteStation(sn)){
+                return;
+            }
+        }
         FlashContinue(sn);
+        qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
     }else{
-        qDebug() << "UpdateDevice04 sn:"<< sn << " fail";
+
+        qDebug()<< "UpdateDevice04 sn:" << sn << " fail";
     }
     burning_flag = false;
 }
@@ -434,13 +469,32 @@ void FlashDevice::UpdateDevice05(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0) &&
+            (FlashRecovery(sn) == 0)){
+        if(TextHelper::IS_NEED_FLASH_BIOS){
+            if((FlashBootloader(sn) == 0) &&
             (FlashLock(sn) == 0)){
-        qDebug()<< "UpdateDevice05 sn:"<< sn << "  successful";
+                qDebug() << sn << "  flash bootloader successful";
+            }else{
+                qDebug() << "flash bootloader fail";
+                return;
+            }
+        }else{
+            if(FlashLock(sn) != 0){
+                qDebug() << sn << " lock fail";
+                return;
+            }
+        }
+        if(!TextHelper::IS_OFFLINE_MODE){
+            if(!CompleteStation(sn)){
+                return;
+            }
+        }
         FlashContinue(sn);
+        qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
     }else{
-        qDebug() << "UpdateDevice05 sn:"<< sn << " fail";
+
+        qDebug()<< "UpdateDevice05 sn:" << sn << " fail";
     }
     burning_flag = false;
 }
@@ -466,13 +520,32 @@ void FlashDevice::UpdateDevice06(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0) &&
+            (FlashRecovery(sn) == 0)){
+        if(TextHelper::IS_NEED_FLASH_BIOS){
+            if((FlashBootloader(sn) == 0) &&
             (FlashLock(sn) == 0)){
-        qDebug()<< "UpdateDevice06 sn:"<< sn << "  successful";
+                qDebug() << sn << "  flash bootloader successful";
+            }else{
+                qDebug() << "flash bootloader fail";
+                return;
+            }
+        }else{
+            if(FlashLock(sn) != 0){
+                qDebug() << sn << " lock fail";
+                return;
+            }
+        }
+        if(!TextHelper::IS_OFFLINE_MODE){
+            if(!CompleteStation(sn)){
+                return;
+            }
+        }
         FlashContinue(sn);
+        qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
     }else{
-        qDebug() << "UpdateDevice06 sn:"<< sn << " fail";
+
+        qDebug()<< "UpdateDevice06 sn:" << sn << " fail";
     }
     burning_flag = false;
 }
