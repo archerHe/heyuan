@@ -17,6 +17,7 @@ class QNetworkReply;
 class QNetworkAccessManager;
 class QTimer;
 class QLabel;
+class QScrollArea;
 
 namespace Ui {
 class MainWindow;
@@ -83,6 +84,7 @@ private:
     SettingFwVer *fw_widget;
     QTimer *timer;
     QLabel *lbl_status_bar_left;
+    QScrollArea *scroll;
     void InitWidget();
     bool isConnectedMes();
     void initFwPath();

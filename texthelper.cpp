@@ -68,4 +68,4 @@ QString TextHelper::OFFLINE_OS_PATH;
 bool TextHelper::IS_OFFLINE_MODE = false;
 bool TextHelper::IS_NEED_FLASH_BIOS = false;
 QString TextHelper::STATION_NAME = "dlos";
-QString TextHelper::VERSION = "V2.0";
+QString TextHelper::VERSION = "V2.1";
