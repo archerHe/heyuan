@@ -16,7 +16,6 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QTimer>
-#include <QScrollArea>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -108,7 +107,7 @@ void MainWindow::InitWidget()
     this->setWindowTitle(TextHelper::VERSION);
     p = new QProcess(this);
     v_layout = new QVBoxLayout();
-    //ui->scrollAreaWidgetContents->setLayout(v_layout);
+    ui->scrollAreaWidgetContents->setLayout(v_layout);
     device.moveToThread(&detect_thread);
     connect(this, SIGNAL(deviceIsChecked(QString)), &device, SLOT(Checking()));
     connect(&device, &DetectDevice::getSn, this, &MainWindow::addDeviceUI);
@@ -132,37 +131,18 @@ void MainWindow::InitWidget()
     device_05->setId("burning05");
     device_06 = new BurningDevice();
     device_06->setId("burning06");
-    //device_01->hide();
-    //device_02->hide();
-    //device_03->hide();
-    //device_04->hide();
-    //device_05->hide();
-    //device_06->hide();
+    device_01->hide();
+    device_02->hide();
+    device_03->hide();
+    device_04->hide();
+    device_05->hide();
+    device_06->hide();
     v_layout->addWidget(device_01);
     v_layout->addWidget(device_02);
     v_layout->addWidget(device_03);
     v_layout->addWidget(device_04);
     v_layout->addWidget(device_05);
     v_layout->addWidget(device_06);
-
-
-    scroll = new QScrollArea();
-    scroll->setWidgetResizable(true);
-    QWidget *scrollWidget = new QWidget(scroll);
-    scroll->setWidget(scrollWidget);
-    scrollWidget->setLayout(v_layout);
-    /*
-    QVBoxLayout *layout = new QVBoxLayout(scrollWidget);
-    layout->setSizeConstraint(QLayout::SetMinimumSize);
-    for(int i = 0; i < 4; i++){
-        BurningDevice *device = new BurningDevice();
-        device->setMinimumSize(50, 100);
-        layout->addWidget(device);
-        //layout->addWidget(new QPushButton());
-    }
-    */
-    ui->verticalLayout->addWidget(scroll);
-
 
     burning_ui_list << device_01 << device_02 << device_03 << device_04 << device_05 << device_06;
 
