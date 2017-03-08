@@ -25,6 +25,9 @@ public:
     int FlashRecovery(QString sn);
     int FlashBootloaderOemvars(QString sn);
     int FlashBootloader(QString sn);
+    int FormatData(QString sn);
+    int FormatCache(QString sn);
+    int RmBiosFV(QString sn);
     int FlashContinue(QString sn);
 
     bool isInFastBootMode(QString sn);

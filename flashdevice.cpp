@@ -119,6 +119,27 @@ int FlashDevice::FlashBootloader(QString sn)
     return p->exitCode();
 }
 
+int FlashDevice::FormatData(QString sn)
+{
+    p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFormatData(sn));
+    p->waitForFinished();
+    return p->exitCode();
+}
+
+int FlashDevice::FormatCache(QString sn)
+{
+    p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFormatCache(sn));
+    p->waitForFinished();
+    return p->exitCode();
+}
+
+int FlashDevice::RmBiosFV(QString sn)
+{
+    p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdRmBiosFV(sn));
+    p->waitForFinished();
+    return p->exitCode();
+}
+
 int FlashDevice::FlashContinue(QString sn)
 {
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFlashContinue(sn));
@@ -286,6 +307,8 @@ void FlashDevice::UpdateDevice(const QString &sn)
                 return;
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -337,6 +360,8 @@ void FlashDevice::UpdateDevice02(const QString &sn)
                 return;
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -387,6 +412,8 @@ void FlashDevice::UpdateDevice03(const QString &sn)
                 return;
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -438,6 +465,8 @@ void FlashDevice::UpdateDevice04(const QString &sn)
                 return;
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -489,6 +518,8 @@ void FlashDevice::UpdateDevice05(const QString &sn)
                 return;
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -540,6 +571,8 @@ void FlashDevice::UpdateDevice06(const QString &sn)
                 return;
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);

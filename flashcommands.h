@@ -19,6 +19,9 @@ public:
     QStringList CmdEnterFastboot(QString sn);
     QStringList CmdFlashBootloader(QString fw_path, QString sn);
     QStringList CmdFlashBootloaderOemvars(QString fw_path, QString sn);
+    QStringList CmdRmBiosFV(QString sn);
+    QStringList CmdFormatData(QString sn);
+    QStringList CmdFormatCache(QString sn);
     static QStringList CmdAdbGetDeviceSn();
     static QStringList CmdAdbStartServer();
 

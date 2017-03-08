@@ -88,6 +88,27 @@ QStringList FlashCommands::CmdFlashBootloaderOemvars(QString fw_path, QString sn
     return par;
 }
 
+QStringList FlashCommands::CmdRmBiosFV(QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "oem" << "rm" << "/ESP/BIOSUPDATE.FV";
+    return par;
+}
+
+QStringList FlashCommands::CmdFormatData(QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "format" << "data";
+    return par;
+}
+
+QStringList FlashCommands::CmdFormatCache(QString sn)
+{
+    QStringList par;
+    par << "-s" << sn << "format" << "cache";
+    return par;
+}
+
 QStringList FlashCommands::CmdAdbGetDeviceSn()
 {
     QStringList par;
