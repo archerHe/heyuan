@@ -45,9 +45,13 @@ int main(int argc, char *argv[])
     //w.setWindowFlags(w.windowFlags()&~Qt::WindowMaximizeButtonHint);
     //QDesktopWidget *dw = QApplication::desktop();
     //w.setFixedSize(dw->width()*0.5, dw->height()*0.5);
-    QApplication::setStyle("Windows");
+    //QApplication::setStyle("Windows");
+    int screen_width = QApplication::desktop()->width();
+    int screen_height = QApplication::desktop()->height();
+    w.setMinimumSize(screen_width / 2, screen_height / 2);
     w.show();
-    w.move ((QApplication::desktop()->width() - w.width())/2,(QApplication::desktop()->height() - w.height())/2);
+
+    w.move ((screen_width - w.width())/2,(screen_height - w.height())/2);
     return a.exec();
 }
 
