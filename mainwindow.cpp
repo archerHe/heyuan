@@ -41,10 +41,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::SelectBurningUI(QString sn)
 {
-    qDebug() << "SelectBurningUI";
+    //qDebug() << "SelectBurningUI";
     foreach (BurningDevice *burning, burning_ui_list) {
         if(!burning->getBurning_flag()){
-            qDebug() << "id: " << burning->getId();
+//            qDebug() << "id: " << burning->getId();
             burning->SetSn(sn);
             burning->show();
             burning->setBurning_flag(true);
@@ -187,7 +187,7 @@ bool MainWindow::isConnectedMes()
     eventLoop.exec();
     QTextCodec *codec = QTextCodec::codecForLocale();
     QString result = codec->toUnicode(reply->readAll());
-    qDebug() << "result" << result;
+    //qDebug() << "result" << result;
     disconnect(manager,&QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
     if(result.trimmed().isEmpty()){
@@ -227,7 +227,7 @@ void MainWindow::on_btn_burning_switch_clicked()
 
 void MainWindow::addDeviceUI(const QString &sn)
 {
-    qDebug() << "addDeviceUI";
+    //qDebug() << "addDeviceUI";
     SelectBurningUI(sn);
     device_manager.StartFlashDevice(sn);
 }
@@ -235,19 +235,17 @@ void MainWindow::addDeviceUI(const QString &sn)
 QString MainWindow::GetDeviceSnFromSn(QString sn)
 {
    p->start(FlashCommands::ADB_PFT, cmd.CmdAdbGetMesSn(sn));
-   qDebug() << "cat.. "<< cmd.CmdAdbGetMesSn(sn);
-   QStringList par;
-   p->start("adb.pft", par);
    p->waitForFinished();
    QString result = p->readAll();
-   qDebug() << "err: "<< p->readAllStandardError();
+   //qDebug() << "err: "<< p->readAllStandardError();
    return result.trimmed();
 }
 
 void MainWindow::UpdateDeviceUI(QString sn)
 {
     foreach (BurningDevice *burning, burning_ui_list) {
-        if(burning->device_sn == sn){
+        qDebug() << " device_sn: " << burning->device_sn;
+        if(!burning->getBurning_flag()){
             QMap<QString, QString>::Iterator it = TextHelper::sn_mesSn_map.find(sn);
             QString mesSn = it.value();
             burning->SetMesSn(mesSn);

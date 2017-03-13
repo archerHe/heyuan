@@ -123,7 +123,7 @@ int FlashDevice::FormatData(QString sn)
 {
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFormatData(sn));
     p->waitForFinished();
-    qDebug() << p->readAll();
+    //qDebug() << p->readAll();
     return p->exitCode();
 }
 
@@ -131,7 +131,7 @@ int FlashDevice::FormatCache(QString sn)
 {
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFormatCache(sn));
     p->waitForFinished();
-    qDebug() << p->readAll();
+    //qDebug() << p->readAll();
     return p->exitCode();
 }
 
@@ -299,8 +299,10 @@ void FlashDevice::UpdateDevice(const QString &sn)
                 qDebug() << "rm bios fv successfully";
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
+        if((FormatData(sn) != 0) || (FormatCache(sn)) != 0){
+            qDebug() << "format data cache fail";
+            return;
+        }
         if(FlashLock(sn) != 0){
             qDebug() << sn << " lock fail";
             return;
@@ -351,8 +353,10 @@ void FlashDevice::UpdateDevice02(const QString &sn)
                 qDebug() << "rm bios fv successfully";
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
+        if((FormatData(sn) != 0) || (FormatCache(sn)) != 0){
+            qDebug() << "format data cache fail";
+            return;
+        }
         if(FlashLock(sn) != 0){
             qDebug() << sn << " lock fail";
             return;
@@ -402,8 +406,10 @@ void FlashDevice::UpdateDevice03(const QString &sn)
                 qDebug() << "rm bios fv successfully";
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
+        if((FormatData(sn) != 0) || (FormatCache(sn)) != 0){
+            qDebug() << "format data cache fail";
+            return;
+        }
         if(FlashLock(sn) != 0){
             qDebug() << sn << " lock fail";
             return;
@@ -454,8 +460,10 @@ void FlashDevice::UpdateDevice04(const QString &sn)
                 qDebug() << "rm bios fv successfully";
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
+        if((FormatData(sn) != 0) || (FormatCache(sn)) != 0){
+            qDebug() << "format data cache fail";
+            return;
+        }
         if(FlashLock(sn) != 0){
             qDebug() << sn << " lock fail";
             return;
@@ -506,8 +514,10 @@ void FlashDevice::UpdateDevice05(const QString &sn)
                 qDebug() << "rm bios fv successfully";
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
+        if((FormatData(sn) != 0) || (FormatCache(sn)) != 0){
+            qDebug() << "format data cache fail";
+            return;
+        }
         if(FlashLock(sn) != 0){
             qDebug() << sn << " lock fail";
             return;
@@ -558,8 +568,10 @@ void FlashDevice::UpdateDevice06(const QString &sn)
                 qDebug() << "rm bios fv successfully";
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
+        if((FormatData(sn) != 0) || (FormatCache(sn)) != 0){
+            qDebug() << "format data cache fail";
+            return;
+        }
         if(FlashLock(sn) != 0){
             qDebug() << sn << " lock fail";
             return;
@@ -585,7 +597,6 @@ void FlashDevice::replyFinished(QNetworkReply *reply)
     QString result = codec->toUnicode(reply->readAll());
     qDebug() << "result" << result;
 }
-
 
 
 QStringList FlashDevice::burning_list;

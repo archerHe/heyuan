@@ -94,8 +94,7 @@ void QDeviceFlashManager::StartFlashDevice(QString sn)
 
 void QDeviceFlashManager::FinishFlash(QString sn)
 {
-    qDebug() << "QDeviceFlashManager FinishFlash.. " << sn;
-
+    //qDebug() << "QDeviceFlashManager FinishFlash.. " << sn;
     foreach (FlashDevice *device, deviceList)
     {
         if(device->sn == sn){
