@@ -20,8 +20,8 @@ QString TextHelper::GetSnFromFastboot(QString result)
     if(result.contains("fastboot")){
         QStringList strList = result.split(" ");
         return strList.at(0).trimmed();
-
     }
+    return NULL;
 }
 
 QString TextHelper::GetSnFromAdb(QString result)
@@ -55,6 +55,7 @@ QString TextHelper::GetFwPathFromReply(QString result)
             return lineList.last().trimmed();
         }
     }
+    return "";
 }
 
 
@@ -68,4 +69,5 @@ QString TextHelper::OFFLINE_OS_PATH;
 bool TextHelper::IS_OFFLINE_MODE = false;
 bool TextHelper::IS_NEED_FLASH_BIOS = false;
 QString TextHelper::STATION_NAME = "dlos";
-QString TextHelper::VERSION = "V2.0";
+QString TextHelper::VERSION = "V2.3";
+bool TextHelper::CHECK_STATION = true;

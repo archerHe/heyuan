@@ -27,6 +27,7 @@ public:
     static QString OFFLINE_OS_PATH;
     static bool IS_OFFLINE_MODE;
     static QString VERSION;
+    static bool CHECK_STATION;
 private:
 
 };

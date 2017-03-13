@@ -4,9 +4,11 @@
 #include <QDateTime>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 
 void outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
+
     static QMutex mutex;
     mutex.lock();
     QString text;
@@ -40,12 +42,9 @@ void outputMessage(QtMsgType type, const QMessageLogContext &context, const QStr
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    qInstallMessageHandler(outputMessage);
+    qDebug() << "-----------------------------------------------------";
     MainWindow w;
-   // qInstallMessageHandler(outputMessage);
-    //w.setWindowFlags(w.windowFlags()&~Qt::WindowMaximizeButtonHint);
-    //QDesktopWidget *dw = QApplication::desktop();
-    //w.setFixedSize(dw->width()*0.5, dw->height()*0.5);
-    //QApplication::setStyle("Windows");
     int screen_width = QApplication::desktop()->width();
     int screen_height = QApplication::desktop()->height();
     w.setMinimumSize(screen_width / 2, screen_height / 2);

@@ -77,7 +77,7 @@ void DetectDevice::CheckADB()
     }
     QStringList list = snList.split("device");
     list.removeLast();
-    qDebug() << "list :: " <<list;
+    //qDebug() << "list :: " <<list;
     foreach (QString sn, list) {
         if(!burningList.contains(sn.trimmed())){
             if(sn.trimmed().isEmpty()){
@@ -88,8 +88,10 @@ void DetectDevice::CheckADB()
 
             QThread::sleep(2);
             if(!TextHelper::IS_OFFLINE_MODE){
-                if(!CheckStation(sn)){
-                    return;
+                if(!TextHelper::CHECK_STATION){
+                    if(!CheckStation(sn)){
+                        return;
+                    }
                 }
             }
 

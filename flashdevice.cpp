@@ -123,6 +123,7 @@ int FlashDevice::FormatData(QString sn)
 {
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFormatData(sn));
     p->waitForFinished();
+    qDebug() << p->readAll();
     return p->exitCode();
 }
 
@@ -130,6 +131,7 @@ int FlashDevice::FormatCache(QString sn)
 {
     p->start(FlashCommands::FAST_BOOT_PFT, cmd->CmdFormatCache(sn));
     p->waitForFinished();
+    qDebug() << p->readAll();
     return p->exitCode();
 }
 
@@ -287,28 +289,27 @@ void FlashDevice::UpdateDevice(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0)){
-        if(TextHelper::IS_NEED_FLASH_BIOS){
-            if((FlashBootloader(sn) == 0) &&
-            (FlashLock(sn) == 0)){
-                qDebug() << sn << "  flash bootloader successful";
+            (FlashRecovery(sn) == 0) &&
+            (FlashBootloader(sn) == 0)){
+        if(!TextHelper::IS_NEED_FLASH_BIOS){
+            if(RmBiosFV(sn) != 0){
+                qDebug() << "rm bios fv fail";
+                return;
             }else{
-                qDebug() << "flash bootloader fail";
-                return;
-            }
-        }else{
-            if(FlashLock(sn) != 0){
-                qDebug() << sn << " lock fail";
-                return;
+                qDebug() << "rm bios fv successfully";
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
+        if(FlashLock(sn) != 0){
+            qDebug() << sn << " lock fail";
+            return;
+            }
         if(!TextHelper::IS_OFFLINE_MODE){
             if(!CompleteStation(sn)){
                 return;
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -340,28 +341,27 @@ void FlashDevice::UpdateDevice02(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0)){
-        if(TextHelper::IS_NEED_FLASH_BIOS){
-            if((FlashBootloader(sn) == 0) &&
-            (FlashLock(sn) == 0)){
-                qDebug() << sn << "  flash bootloader successful";
+            (FlashRecovery(sn) == 0) &&
+            (FlashBootloader(sn) == 0)){
+        if(!TextHelper::IS_NEED_FLASH_BIOS){
+            if(RmBiosFV(sn) != 0){
+                qDebug() << "rm bios fv fail";
+                return;
             }else{
-                qDebug() << sn << "  flash bootloader fail";
-                return;
-            }
-        }else{
-            if(FlashLock(sn) != 0){
-                qDebug() << sn << " lock fail";
-                return;
+                qDebug() << "rm bios fv successfully";
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
+        if(FlashLock(sn) != 0){
+            qDebug() << sn << " lock fail";
+            return;
+            }
         if(!TextHelper::IS_OFFLINE_MODE){
             if(!CompleteStation(sn)){
                 return;
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -392,28 +392,27 @@ void FlashDevice::UpdateDevice03(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0)){
-        if(TextHelper::IS_NEED_FLASH_BIOS){
-            if((FlashBootloader(sn) == 0) &&
-            (FlashLock(sn) == 0)){
-                qDebug() << sn << "  flash bootloader successful";
+            (FlashRecovery(sn) == 0) &&
+            (FlashBootloader(sn) == 0)){
+        if(!TextHelper::IS_NEED_FLASH_BIOS){
+            if(RmBiosFV(sn) != 0){
+                qDebug() << "rm bios fv fail";
+                return;
             }else{
-                qDebug() << "flash bootloader fail";
-                return;
-            }
-        }else{
-            if(FlashLock(sn) != 0){
-                qDebug() << sn << " lock fail";
-                return;
+                qDebug() << "rm bios fv successfully";
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
+        if(FlashLock(sn) != 0){
+            qDebug() << sn << " lock fail";
+            return;
+            }
         if(!TextHelper::IS_OFFLINE_MODE){
             if(!CompleteStation(sn)){
                 return;
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -445,28 +444,27 @@ void FlashDevice::UpdateDevice04(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0)){
-        if(TextHelper::IS_NEED_FLASH_BIOS){
-            if((FlashBootloader(sn) == 0) &&
-            (FlashLock(sn) == 0)){
-                qDebug() << sn << "  flash bootloader successful";
+            (FlashRecovery(sn) == 0) &&
+            (FlashBootloader(sn) == 0)){
+        if(!TextHelper::IS_NEED_FLASH_BIOS){
+            if(RmBiosFV(sn) != 0){
+                qDebug() << "rm bios fv fail";
+                return;
             }else{
-                qDebug() << "flash bootloader fail";
-                return;
-            }
-        }else{
-            if(FlashLock(sn) != 0){
-                qDebug() << sn << " lock fail";
-                return;
+                qDebug() << "rm bios fv successfully";
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
+        if(FlashLock(sn) != 0){
+            qDebug() << sn << " lock fail";
+            return;
+            }
         if(!TextHelper::IS_OFFLINE_MODE){
             if(!CompleteStation(sn)){
                 return;
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -498,28 +496,27 @@ void FlashDevice::UpdateDevice05(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0)){
-        if(TextHelper::IS_NEED_FLASH_BIOS){
-            if((FlashBootloader(sn) == 0) &&
-            (FlashLock(sn) == 0)){
-                qDebug() << sn << "  flash bootloader successful";
+            (FlashRecovery(sn) == 0) &&
+            (FlashBootloader(sn) == 0)){
+        if(!TextHelper::IS_NEED_FLASH_BIOS){
+            if(RmBiosFV(sn) != 0){
+                qDebug() << "rm bios fv fail";
+                return;
             }else{
-                qDebug() << "flash bootloader fail";
-                return;
-            }
-        }else{
-            if(FlashLock(sn) != 0){
-                qDebug() << sn << " lock fail";
-                return;
+                qDebug() << "rm bios fv successfully";
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
+        if(FlashLock(sn) != 0){
+            qDebug() << sn << " lock fail";
+            return;
+            }
         if(!TextHelper::IS_OFFLINE_MODE){
             if(!CompleteStation(sn)){
                 return;
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
@@ -551,28 +548,27 @@ void FlashDevice::UpdateDevice06(const QString &sn)
     if((FlashUnlock(sn) == 0) &&
             (FlashBootImg(sn) == 0) &&
             (FlashSystem(sn) == 0) &&
-            (FlashRecovery(sn) == 0)){
-        if(TextHelper::IS_NEED_FLASH_BIOS){
-            if((FlashBootloader(sn) == 0) &&
-            (FlashLock(sn) == 0)){
-                qDebug() << sn << "  flash bootloader successful";
+            (FlashRecovery(sn) == 0) &&
+            (FlashBootloader(sn) == 0)){
+        if(!TextHelper::IS_NEED_FLASH_BIOS){
+            if(RmBiosFV(sn) != 0){
+                qDebug() << "rm bios fv fail";
+                return;
             }else{
-                qDebug() << "flash bootloader fail";
-                return;
-            }
-        }else{
-            if(FlashLock(sn) != 0){
-                qDebug() << sn << " lock fail";
-                return;
+                qDebug() << "rm bios fv successfully";
             }
         }
+        FormatData(sn);
+        FormatCache(sn);
+        if(FlashLock(sn) != 0){
+            qDebug() << sn << " lock fail";
+            return;
+            }
         if(!TextHelper::IS_OFFLINE_MODE){
             if(!CompleteStation(sn)){
                 return;
             }
         }
-        FormatData(sn);
-        FormatCache(sn);
         FlashContinue(sn);
         qDebug() << sn << " flash successfully";
         emit FinishedFlash(sn);
