@@ -307,7 +307,7 @@ void FlashDevice::UpdateDevice(const QString &sn)
             qDebug() << sn << " lock fail";
             return;
             }
-        if(!TextHelper::IS_OFFLINE_MODE){
+        if(!TextHelper::IS_OFFLINE_MODE && TextHelper::CHECK_STATION){
             if(!CompleteStation(sn)){
                 return;
             }

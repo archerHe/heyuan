@@ -47,7 +47,7 @@ public slots:
     void replyFinished(QNetworkReply *reply);
     void selectFromMes(QString sn);
 
-    void removeUI(QString sn);
+
 
 private slots:
     void on_btn_burning_switch_clicked();
@@ -58,6 +58,8 @@ private slots:
     void on_actionFw_ver_triggered();
 
     void on_actionOffline_triggered();
+
+    void removeUI(QString sn);
 
 private:
     Ui::MainWindow *ui;

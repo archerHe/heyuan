@@ -88,16 +88,15 @@ void DetectDevice::CheckADB()
 
             QThread::sleep(2);
             if(!TextHelper::IS_OFFLINE_MODE){
-                if(!TextHelper::CHECK_STATION){
+                if(TextHelper::CHECK_STATION){
                     if(!CheckStation(sn)){
-                        return;
+                        continue;
                     }
                 }
             }
 
             emit getSn(sn.trimmed());
             p->start(FlashCommands::ADB_PFT, cmd.CmdEnterFastboot(sn.trimmed()));
-            //qDebug() << cmd.CmdEnterFastboot(sn);
             p->waitForFinished();
 
         }
@@ -113,7 +112,11 @@ void DetectDevice::CheckADB()
 
 bool DetectDevice::CheckStation(QString sn)
 {
+    qDebug() << "CheckStation   sn: " << sn;
     QMap<QString, QString>::Iterator it = TextHelper::sn_mesSn_map.find(sn.trimmed());
+    if(it == TextHelper::sn_mesSn_map.end()){
+        return false;
+    }
     QString mesSn = it.value();
     QString strUrl = "http://172.16.50.51/SFAPI/api.ashx?type=20&action=start&sn=" + mesSn + "&station=" + TextHelper::STATION_NAME + "&uid=1&pwd=11";
     qDebug() << "check station url: " << strUrl;

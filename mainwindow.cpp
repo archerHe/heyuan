@@ -44,7 +44,6 @@ void MainWindow::SelectBurningUI(QString sn)
     //qDebug() << "SelectBurningUI";
     foreach (BurningDevice *burning, burning_ui_list) {
         if(!burning->getBurning_flag()){
-//            qDebug() << "id: " << burning->getId();
             burning->SetSn(sn);
             burning->show();
             burning->setBurning_flag(true);
@@ -61,7 +60,7 @@ void MainWindow::Finished(QString sn)
         if(burning->device_sn == sn){
             burning->SetSn("");
             burning->setBurning_flag(false);
-            burning->setBackbroundColor("rgb(85,90,205)");
+            burning->setBackbroundColor("rgb(127,255,0)");
             burning->hide();
         }
     }
@@ -84,6 +83,13 @@ void MainWindow::replyFinished(QNetworkReply *reply)
 void MainWindow::selectFromMes(QString sn)
 {
     QString mes_sn = GetDeviceSnFromSn(sn.trimmed());
+    if(mes_sn.isEmpty()){
+        qDebug() << "cat .deviceSn fail";
+        QMessageBox::critical(this, "error", "get device sn fail");
+        if(!TextHelper::IS_OFFLINE_MODE){
+            return;
+        }
+    }
     snForList = sn.trimmed();
     TextHelper::sn_mesSn_map.insert(sn.trimmed(), mes_sn);
     manager->get(QNetworkRequest(QUrl(textHelper.GetMesUrl(mes_sn))));
@@ -236,22 +242,32 @@ QString MainWindow::GetDeviceSnFromSn(QString sn)
 {
    p->start(FlashCommands::ADB_PFT, cmd.CmdAdbGetMesSn(sn));
    p->waitForFinished();
-   QString result = p->readAll();
-   //qDebug() << "err: "<< p->readAllStandardError();
+   QString result = p->readAllStandardOutput();
+   if(result.length() > 10){
+       QStringList par;
+       par << "-s" << sn << "shell" << "getprop" << "ro.lenovosn2";
+       p->start(FlashCommands::ADB_PFT, par);
+       p->waitForFinished();
+       return p->readAllStandardOutput().trimmed();
+   }
    return result.trimmed();
 }
 
 void MainWindow::UpdateDeviceUI(QString sn)
 {
     foreach (BurningDevice *burning, burning_ui_list) {
-        qDebug() << " device_sn: " << burning->device_sn;
+        //qDebug() << " device_sn: " << burning->device_sn;
         if(!burning->getBurning_flag()){
             QMap<QString, QString>::Iterator it = TextHelper::sn_mesSn_map.find(sn);
             QString mesSn = it.value();
             burning->SetMesSn(mesSn);
             QMap<QString, QString>::Iterator it_fw = TextHelper::sn_fw_map.find(sn);
             QString snFw = it_fw.value();
-            burning->SetFwVer(snFw);
+            if(TextHelper::IS_OFFLINE_MODE){
+                burning->SetFwVer(TextHelper::OFFLINE_OS_PATH);
+            }else{
+                burning->SetFwVer(snFw);
+            }
         }
     }
 }
