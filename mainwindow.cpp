@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QTimer>
+#include <QSpacerItem>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -149,6 +150,9 @@ void MainWindow::InitWidget()
     v_layout->addWidget(device_04);
     v_layout->addWidget(device_05);
     v_layout->addWidget(device_06);
+    QSpacerItem *vSpacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Expanding);
+    v_layout->addSpacerItem(vSpacer);
+
 
     burning_ui_list << device_01 << device_02 << device_03 << device_04 << device_05 << device_06;
 
